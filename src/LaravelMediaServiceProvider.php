@@ -32,7 +32,7 @@ class LaravelMediaServiceProvider extends PackageServiceProvider
         // Publish migrations with a specific tag
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../database/migrations/create_media_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_media_table.php'),
+                __DIR__.'/../database/migrations/create_media_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'_create_media_table.php'),
             ], 'laravel-media-migrations');
         }
     }
