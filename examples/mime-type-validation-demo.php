@@ -2,7 +2,7 @@
 
 /**
  * Laravel Media Package - MIME Type Validation Demo
- * 
+ *
  * This file demonstrates the fixed MIME type validation functionality.
  * The package now properly validates MIME types using custom validation rules
  * instead of the incorrect 'mimes' rule that was expecting extensions.
@@ -88,7 +88,7 @@ public function addMedia(UploadedFile $file, string $collection = 'default', arr
             "File type '{$file->getMimeType()}' is not allowed for collection '{$collection}'"
         );
     }
-    
+
     // ... rest of the method
 }
 
