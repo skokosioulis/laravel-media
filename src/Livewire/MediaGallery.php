@@ -2,7 +2,6 @@
 
 namespace Skokosioulis\LaravelMedia\Livewire;
 
-use Livewire\Attributes\On;
 use Livewire\Component;
 use Skokosioulis\LaravelMedia\Models\Media;
 
