@@ -34,6 +34,16 @@ class LaravelMediaServiceProvider extends PackageServiceProvider
             $this->publishes([
                 __DIR__.'/../database/migrations/create_media_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'_create_media_table.php'),
             ], 'laravel-media-migrations');
+
+            // Publish views with a specific tag
+            $this->publishes([
+                __DIR__.'/../resources/views' => resource_path('views/vendor/laravel-media'),
+            ], 'laravel-media-views');
+
+            // Publish config with a specific tag
+            $this->publishes([
+                __DIR__.'/../config/media.php' => config_path('media.php'),
+            ], 'laravel-media-config');
         }
     }
 }
