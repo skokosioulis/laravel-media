@@ -14,11 +14,6 @@ class LaravelMediaServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
-        /*
-         * This class is a Package Service Provider
-         *
-         * More info: https://github.com/spatie/laravel-package-tools
-         */
         $package
             ->name('laravel-media')
             ->hasConfigFile('media')
@@ -33,5 +28,12 @@ class LaravelMediaServiceProvider extends PackageServiceProvider
         Livewire::component('media-upload', MediaUpload::class);
         Livewire::component('media-gallery', MediaGallery::class);
         Livewire::component('sortable-media-gallery', SortableMediaGallery::class);
+
+        // Publish migrations with a specific tag
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__ . '/../database/migrations/create_media_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_media_table.php'),
+            ], 'laravel-media-migrations');
+        }
     }
 }
