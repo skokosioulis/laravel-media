@@ -3,16 +3,20 @@
 namespace Skokosioulis\LaravelMedia\Livewire;
 
 use Livewire\Component;
-use Livewire\Attributes\On;
 use Skokosioulis\LaravelMedia\Models\Media;
 
 class SortableMediaGallery extends Component
 {
     public $model;
+
     public $modelId;
+
     public $collection = 'default';
+
     public $columns = 4;
+
     public $showInfo = true;
+
     public $media = [];
 
     public function mount($model = null, $modelId = null, $collection = 'default', $columns = 4, $showInfo = true)
@@ -22,7 +26,7 @@ class SortableMediaGallery extends Component
         $this->collection = $collection;
         $this->columns = $columns;
         $this->showInfo = $showInfo;
-        
+
         $this->loadMedia();
     }
 
@@ -31,7 +35,7 @@ class SortableMediaGallery extends Component
         if ($this->model && $this->modelId) {
             $modelClass = $this->model;
             $modelInstance = $modelClass::find($this->modelId);
-            
+
             if ($modelInstance) {
                 $this->media = $modelInstance->getMedia($this->collection)->toArray();
             }
@@ -44,7 +48,7 @@ class SortableMediaGallery extends Component
     public function removeMedia($mediaId)
     {
         $media = Media::find($mediaId);
-        
+
         if ($media) {
             $media->delete();
             $this->loadMedia();
@@ -57,7 +61,7 @@ class SortableMediaGallery extends Component
         foreach ($orderedIds as $index => $mediaId) {
             Media::where('id', $mediaId)->update(['order_column' => $index + 1]);
         }
-        
+
         $this->loadMedia();
         $this->dispatch('media-reordered', ['collection' => $this->collection]);
     }

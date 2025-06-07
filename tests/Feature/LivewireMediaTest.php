@@ -1,21 +1,21 @@
 <?php
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
-use Skokosioulis\LaravelMedia\Livewire\MediaUpload;
 use Skokosioulis\LaravelMedia\Livewire\MediaGallery;
+use Skokosioulis\LaravelMedia\Livewire\MediaUpload;
 use Skokosioulis\LaravelMedia\Livewire\SortableMediaGallery;
-use Skokosioulis\LaravelMedia\Models\Media;
 use Skokosioulis\LaravelMedia\Traits\HasMedia;
-use Illuminate\Database\Eloquent\Model;
 
 // Test model that uses HasMedia trait
 class TestModelForLivewire extends Model
 {
     use HasMedia;
-    
+
     protected $table = 'test_models_livewire';
+
     protected $fillable = ['name'];
 }
 
@@ -26,7 +26,7 @@ beforeEach(function () {
         $table->string('name');
         $table->timestamps();
     });
-    
+
     Storage::fake('public');
 });
 
@@ -36,173 +36,173 @@ afterEach(function () {
 
 it('can render media upload component', function () {
     $model = TestModelForLivewire::create(['name' => 'Test Model']);
-    
+
     Livewire::test(MediaUpload::class, [
         'model' => TestModelForLivewire::class,
         'modelId' => $model->id,
-        'collection' => 'default'
+        'collection' => 'default',
     ])
-    ->assertStatus(200)
-    ->assertSee('Click to upload')
-    ->assertSee('drag and drop');
+        ->assertStatus(200)
+        ->assertSee('Click to upload')
+        ->assertSee('drag and drop');
 });
 
 it('can upload files through livewire component', function () {
     $model = TestModelForLivewire::create(['name' => 'Test Model']);
-    
+
     $file = UploadedFile::fake()->image('test.jpg', 100, 100);
-    
+
     Livewire::test(MediaUpload::class, [
         'model' => TestModelForLivewire::class,
         'modelId' => $model->id,
-        'collection' => 'default'
+        'collection' => 'default',
     ])
-    ->set('files', [$file])
-    ->assertHasNoErrors()
-    ->assertDispatched('media-uploaded');
-    
+        ->set('files', [$file])
+        ->assertHasNoErrors()
+        ->assertDispatched('media-uploaded');
+
     expect($model->fresh()->getMedia())->toHaveCount(1);
 });
 
 it('validates file uploads', function () {
     $model = TestModelForLivewire::create(['name' => 'Test Model']);
-    
+
     // Create a file that's too large (assuming max is 10MB)
     $largeFile = UploadedFile::fake()->create('large.txt', 20000); // 20MB
-    
+
     Livewire::test(MediaUpload::class, [
         'model' => TestModelForLivewire::class,
         'modelId' => $model->id,
-        'collection' => 'default'
+        'collection' => 'default',
     ])
-    ->set('files', [$largeFile])
-    ->assertHasErrors(['files.0']);
+        ->set('files', [$largeFile])
+        ->assertHasErrors(['files.0']);
 });
 
 it('can remove files through livewire component', function () {
     $model = TestModelForLivewire::create(['name' => 'Test Model']);
-    
+
     $file = UploadedFile::fake()->image('test.jpg', 100, 100);
     $media = $model->addMedia($file);
-    
+
     Livewire::test(MediaUpload::class, [
         'model' => TestModelForLivewire::class,
         'modelId' => $model->id,
-        'collection' => 'default'
+        'collection' => 'default',
     ])
-    ->call('removeFile', $media->id)
-    ->assertDispatched('media-removed');
-    
+        ->call('removeFile', $media->id)
+        ->assertDispatched('media-removed');
+
     expect($model->fresh()->getMedia())->toHaveCount(0);
 });
 
 it('can render media gallery component', function () {
     $model = TestModelForLivewire::create(['name' => 'Test Model']);
-    
+
     $file = UploadedFile::fake()->image('test.jpg', 100, 100);
     $model->addMedia($file);
-    
+
     Livewire::test(MediaGallery::class, [
         'model' => TestModelForLivewire::class,
         'modelId' => $model->id,
-        'collection' => 'default'
+        'collection' => 'default',
     ])
-    ->assertStatus(200)
-    ->assertSee('test.jpg');
+        ->assertStatus(200)
+        ->assertSee('test.jpg');
 });
 
 it('shows empty state when no media exists', function () {
     $model = TestModelForLivewire::create(['name' => 'Test Model']);
-    
+
     Livewire::test(MediaGallery::class, [
         'model' => TestModelForLivewire::class,
         'modelId' => $model->id,
-        'collection' => 'default'
+        'collection' => 'default',
     ])
-    ->assertStatus(200)
-    ->assertSee('No media files')
-    ->assertSee('Upload some files to see them here');
+        ->assertStatus(200)
+        ->assertSee('No media files')
+        ->assertSee('Upload some files to see them here');
 });
 
 it('can remove media from gallery', function () {
     $model = TestModelForLivewire::create(['name' => 'Test Model']);
-    
+
     $file = UploadedFile::fake()->image('test.jpg', 100, 100);
     $media = $model->addMedia($file);
-    
+
     Livewire::test(MediaGallery::class, [
         'model' => TestModelForLivewire::class,
         'modelId' => $model->id,
-        'collection' => 'default'
+        'collection' => 'default',
     ])
-    ->call('removeMedia', $media->id)
-    ->assertDispatched('media-removed');
-    
+        ->call('removeMedia', $media->id)
+        ->assertDispatched('media-removed');
+
     expect($model->fresh()->getMedia())->toHaveCount(0);
 });
 
 it('loads existing media on component mount', function () {
     $model = TestModelForLivewire::create(['name' => 'Test Model']);
-    
+
     $file1 = UploadedFile::fake()->image('test1.jpg', 100, 100);
     $file2 = UploadedFile::fake()->image('test2.jpg', 100, 100);
-    
+
     $model->addMedia($file1);
     $model->addMedia($file2);
-    
+
     $component = Livewire::test(MediaUpload::class, [
         'model' => TestModelForLivewire::class,
         'modelId' => $model->id,
-        'collection' => 'default'
+        'collection' => 'default',
     ]);
-    
+
     expect($component->get('existingMedia'))->toHaveCount(2);
 });
 
 it('respects collection parameter', function () {
     $model = TestModelForLivewire::create(['name' => 'Test Model']);
-    
+
     $file1 = UploadedFile::fake()->image('avatar.jpg', 100, 100);
     $file2 = UploadedFile::fake()->image('gallery.jpg', 100, 100);
-    
+
     $model->addMedia($file1, 'avatars');
     $model->addMedia($file2, 'gallery');
-    
+
     // Test avatars collection
     $avatarComponent = Livewire::test(MediaGallery::class, [
         'model' => TestModelForLivewire::class,
         'modelId' => $model->id,
-        'collection' => 'avatars'
+        'collection' => 'avatars',
     ]);
-    
+
     expect($avatarComponent->get('media'))->toHaveCount(1);
-    
+
     // Test gallery collection
     $galleryComponent = Livewire::test(MediaGallery::class, [
         'model' => TestModelForLivewire::class,
         'modelId' => $model->id,
-        'collection' => 'gallery'
+        'collection' => 'gallery',
     ]);
-    
+
     expect($galleryComponent->get('media'))->toHaveCount(1);
 });
 
 it('handles multiple file uploads', function () {
     $model = TestModelForLivewire::create(['name' => 'Test Model']);
-    
+
     $file1 = UploadedFile::fake()->image('test1.jpg', 100, 100);
     $file2 = UploadedFile::fake()->image('test2.jpg', 100, 100);
-    
+
     Livewire::test(MediaUpload::class, [
         'model' => TestModelForLivewire::class,
         'modelId' => $model->id,
         'collection' => 'default',
-        'multiple' => true
+        'multiple' => true,
     ])
-    ->set('files', [$file1, $file2])
-    ->assertHasNoErrors()
-    ->assertDispatched('media-uploaded');
-    
+        ->set('files', [$file1, $file2])
+        ->assertHasNoErrors()
+        ->assertDispatched('media-uploaded');
+
     expect($model->fresh()->getMedia())->toHaveCount(2);
 });
 
@@ -215,7 +215,7 @@ it('enforces single file upload when multiple is false', function () {
         'model' => TestModelForLivewire::class,
         'modelId' => $model->id,
         'collection' => 'avatars',
-        'multiple' => false
+        'multiple' => false,
     ]);
 
     expect($component->get('multiple'))->toBeFalse();
@@ -233,12 +233,12 @@ it('can render sortable media gallery component', function () {
     Livewire::test(SortableMediaGallery::class, [
         'model' => TestModelForLivewire::class,
         'modelId' => $model->id,
-        'collection' => 'default'
+        'collection' => 'default',
     ])
-    ->assertStatus(200)
-    ->assertSee('Drag and drop to reorder')
-    ->assertSee('test1.jpg')
-    ->assertSee('test2.jpg');
+        ->assertStatus(200)
+        ->assertSee('Drag and drop to reorder')
+        ->assertSee('test1.jpg')
+        ->assertSee('test2.jpg');
 });
 
 it('can update media order in sortable gallery', function () {
@@ -263,10 +263,10 @@ it('can update media order in sortable gallery', function () {
     Livewire::test(SortableMediaGallery::class, [
         'model' => TestModelForLivewire::class,
         'modelId' => $model->id,
-        'collection' => 'default'
+        'collection' => 'default',
     ])
-    ->call('updateOrder', $newOrder)
-    ->assertDispatched('media-reordered');
+        ->call('updateOrder', $newOrder)
+        ->assertDispatched('media-reordered');
 
     // Check new order
     expect($media3->fresh()->order_column)->toBe(1);
@@ -290,10 +290,10 @@ it('can update media order in regular gallery with sortable enabled', function (
         'model' => TestModelForLivewire::class,
         'modelId' => $model->id,
         'collection' => 'default',
-        'sortable' => true
+        'sortable' => true,
     ])
-    ->call('updateMediaOrder', $newOrder)
-    ->assertDispatched('media-reordered');
+        ->call('updateMediaOrder', $newOrder)
+        ->assertDispatched('media-reordered');
 
     // Check new order
     expect($media2->fresh()->order_column)->toBe(1);
@@ -315,10 +315,10 @@ it('can update media order in upload component with sortable preview', function 
         'model' => TestModelForLivewire::class,
         'modelId' => $model->id,
         'collection' => 'default',
-        'sortablePreview' => true
+        'sortablePreview' => true,
     ])
-    ->call('updateMediaOrder', $newOrder)
-    ->assertDispatched('media-reordered');
+        ->call('updateMediaOrder', $newOrder)
+        ->assertDispatched('media-reordered');
 
     // Check new order
     expect($media2->fresh()->order_column)->toBe(1);

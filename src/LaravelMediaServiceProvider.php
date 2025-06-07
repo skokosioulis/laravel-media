@@ -3,12 +3,12 @@
 namespace Skokosioulis\LaravelMedia;
 
 use Livewire\Livewire;
+use Skokosioulis\LaravelMedia\Commands\LaravelMediaCommand;
+use Skokosioulis\LaravelMedia\Livewire\MediaGallery;
+use Skokosioulis\LaravelMedia\Livewire\MediaUpload;
+use Skokosioulis\LaravelMedia\Livewire\SortableMediaGallery;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Skokosioulis\LaravelMedia\Commands\LaravelMediaCommand;
-use Skokosioulis\LaravelMedia\Livewire\MediaUpload;
-use Skokosioulis\LaravelMedia\Livewire\MediaGallery;
-use Skokosioulis\LaravelMedia\Livewire\SortableMediaGallery;
 
 class LaravelMediaServiceProvider extends PackageServiceProvider
 {

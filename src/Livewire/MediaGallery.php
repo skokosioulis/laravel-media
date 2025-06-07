@@ -2,18 +2,24 @@
 
 namespace Skokosioulis\LaravelMedia\Livewire;
 
-use Livewire\Component;
 use Livewire\Attributes\On;
+use Livewire\Component;
 use Skokosioulis\LaravelMedia\Models\Media;
 
 class MediaGallery extends Component
 {
     public $model;
+
     public $modelId;
+
     public $collection = 'default';
+
     public $columns = 4;
+
     public $showInfo = true;
+
     public $sortable = false;
+
     public $media = [];
 
     public function mount($model = null, $modelId = null, $collection = 'default', $columns = 4, $showInfo = true, $sortable = false)
@@ -33,7 +39,7 @@ class MediaGallery extends Component
         if ($this->model && $this->modelId) {
             $modelClass = $this->model;
             $modelInstance = $modelClass::find($this->modelId);
-            
+
             if ($modelInstance) {
                 $this->media = $modelInstance->getMedia($this->collection)->toArray();
             }

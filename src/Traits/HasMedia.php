@@ -36,26 +36,26 @@ trait HasMedia
     {
         $disk = config('media.disk', 'public');
         $directory = config('media.directory', 'media');
-        
+
         // Generate unique filename
         $fileName = $this->generateUniqueFileName($file);
-        $path = $directory . '/' . $fileName;
-        
+        $path = $directory.'/'.$fileName;
+
         // Store the file
         $storedPath = $file->storeAs($directory, $fileName, $disk);
-        
+
         // Calculate checksum
         $checksum = md5_file($file->getRealPath());
-        
+
         // Determine file type
         $type = $this->determineFileType($file->getMimeType());
-        
+
         // Get file metadata
         $fileMetadata = $this->extractFileMetadata($file, $metadata);
-        
+
         // Get next order column
         $orderColumn = $this->getNextOrderColumn($collection);
-        
+
         return $this->media()->create([
             'name' => $file->getClientOriginalName(),
             'file_name' => $fileName,
@@ -76,7 +76,7 @@ trait HasMedia
         $disk = config('media.disk', 'public');
         $directory = config('media.directory', 'media');
 
-        if (!file_exists($path)) {
+        if (! file_exists($path)) {
             throw new \InvalidArgumentException("File does not exist at path: {$path}");
         }
 
@@ -86,7 +86,7 @@ trait HasMedia
 
         // Generate unique filename
         $fileName = $this->generateUniqueFileNameFromPath($path);
-        $storedPath = $directory . '/' . $fileName;
+        $storedPath = $directory.'/'.$fileName;
 
         // Copy file to storage
         Storage::disk($disk)->put($storedPath, file_get_contents($path));
@@ -133,7 +133,7 @@ trait HasMedia
         $name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $slug = Str::slug($name);
 
-        return $slug . '-' . time() . '-' . Str::random(8) . '.' . $extension;
+        return $slug.'-'.time().'-'.Str::random(8).'.'.$extension;
     }
 
     protected function generateUniqueFileNameFromPath(string $path): string
@@ -142,7 +142,7 @@ trait HasMedia
         $name = pathinfo($path, PATHINFO_FILENAME);
         $slug = Str::slug($name);
 
-        return $slug . '-' . time() . '-' . Str::random(8) . '.' . $extension;
+        return $slug.'-'.time().'-'.Str::random(8).'.'.$extension;
     }
 
     protected function determineFileType(string $mimeType): string
@@ -150,15 +150,15 @@ trait HasMedia
         if (Str::startsWith($mimeType, 'image/')) {
             return 'image';
         }
-        
+
         if (Str::startsWith($mimeType, 'video/')) {
             return 'video';
         }
-        
+
         if (Str::startsWith($mimeType, 'audio/')) {
             return 'audio';
         }
-        
+
         $documentMimes = [
             'application/pdf',
             'application/msword',
@@ -169,18 +169,18 @@ trait HasMedia
             'application/vnd.openxmlformats-officedocument.presentationml.presentation',
             'text/plain',
         ];
-        
+
         if (in_array($mimeType, $documentMimes)) {
             return 'document';
         }
-        
+
         return 'file';
     }
 
     protected function extractFileMetadata(UploadedFile $file, array $additionalMetadata = []): array
     {
         $metadata = $additionalMetadata;
-        
+
         // Extract image dimensions if it's an image
         if (Str::startsWith($file->getMimeType(), 'image/')) {
             $imageInfo = getimagesize($file->getRealPath());
@@ -189,14 +189,14 @@ trait HasMedia
                 $metadata['height'] = $imageInfo[1];
             }
         }
-        
+
         return $metadata;
     }
 
     protected function getNextOrderColumn(string $collection): int
     {
         $lastMedia = $this->media()->inCollection($collection)->orderBy('order_column', 'desc')->first();
-        
+
         return $lastMedia ? $lastMedia->order_column + 1 : 1;
     }
 }
