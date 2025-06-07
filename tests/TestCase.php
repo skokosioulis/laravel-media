@@ -3,6 +3,7 @@
 namespace Skokosioulis\LaravelMedia\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Skokosioulis\LaravelMedia\LaravelMediaServiceProvider;
 
@@ -21,17 +22,24 @@ class TestCase extends Orchestra
     {
         return [
             LaravelMediaServiceProvider::class,
+            LivewireServiceProvider::class,
         ];
     }
 
     public function getEnvironmentSetUp($app)
     {
         config()->set('database.default', 'testing');
+        config()->set('database.connections.testing', [
+            'driver' => 'sqlite',
+            'database' => ':memory:',
+            'prefix' => '',
+        ]);
+    }
 
-        /*
-         foreach (\Illuminate\Support\Facades\File::allFiles(__DIR__ . '/database/migrations') as $migration) {
-            (include $migration->getRealPath())->up();
-         }
-         */
+    protected function defineDatabaseMigrations()
+    {
+        // Run the media table migration
+        $migration = include __DIR__.'/../database/migrations/create_media_table.php.stub';
+        $migration->up();
     }
 }

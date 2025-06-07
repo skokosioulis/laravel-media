@@ -91,18 +91,19 @@
             </div>
             
             @if($sortablePreview)
-                <div 
-                    wire:sortable="updateMediaOrder"
+                <div
+                    x-data="sortableUpload()"
+                    x-init="initSortable()"
                     class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"
+                    id="sortable-upload-{{ $collection }}"
                 >
                     @foreach($existingMedia as $media)
-                        <div 
-                            wire:sortable.item="{{ $media['id'] }}" 
-                            wire:key="upload-media-{{ $media['id'] }}"
-                            class="relative group cursor-move"
+                        <div
+                            data-id="{{ $media['id'] }}"
+                            class="relative group sortable-item"
                         >
                             <!-- Drag Handle -->
-                            <div wire:sortable.handle class="absolute top-1 left-1 z-10 bg-gray-800 bg-opacity-75 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                            <div class="absolute top-1 left-1 z-10 bg-gray-800 bg-opacity-75 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 cursor-move sortable-handle">
                                 <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M7 2a2 2 0 1 1 .001 4.001A2 2 0 0 1 7 2zM7 8a2 2 0 1 1 .001 4.001A2 2 0 0 1 7 8zM7 14a2 2 0 1 1 .001 4.001A2 2 0 0 1 7 14zM13 2a2 2 0 1 1 .001 4.001A2 2 0 0 1 13 2zM13 8a2 2 0 1 1 .001 4.001A2 2 0 0 1 13 8zM13 14a2 2 0 1 1 .001 4.001A2 2 0 0 1 13 14z"></path>
                                 </svg>
@@ -123,3 +124,37 @@
         </div>
     @endif
 </div>
+
+@if($sortablePreview)
+    <!-- Include SortableJS -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
+    <script>
+        function sortableUpload() {
+            return {
+                sortable: null,
+                initSortable() {
+                    const container = document.getElementById('sortable-upload-{{ $collection }}');
+                    if (container && typeof Sortable !== 'undefined') {
+                        this.sortable = Sortable.create(container, {
+                            handle: '.sortable-handle',
+                            animation: 150,
+                            ghostClass: 'opacity-50',
+                            chosenClass: 'scale-105',
+                            onEnd: (evt) => {
+                                const items = Array.from(container.children);
+                                const orderedIds = items.map(item => item.dataset.id);
+                                @this.call('updateMediaOrder', orderedIds);
+                            }
+                        });
+                    }
+                },
+                destroy() {
+                    if (this.sortable) {
+                        this.sortable.destroy();
+                    }
+                }
+            }
+        }
+    </script>
+@endif

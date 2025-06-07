@@ -60,7 +60,6 @@ class MediaGallery extends Component
         }
     }
 
-    #[On('media-sorted')]
     public function updateMediaOrder($orderedIds)
     {
         foreach ($orderedIds as $index => $mediaId) {

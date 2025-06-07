@@ -2,8 +2,9 @@
     @if(count($media) > 0)
         @if($sortable)
             <!-- Sortable Mode -->
-            <div 
-                wire:sortable="updateMediaOrder"
+            <div
+                x-data="sortableGallery()"
+                x-init="initSortable()"
                 class="grid gap-4 @switch($columns)
                     @case(2) grid-cols-2 @break
                     @case(3) grid-cols-3 @break
@@ -12,15 +13,15 @@
                     @case(6) grid-cols-2 md:grid-cols-6 @break
                     @default grid-cols-2 md:grid-cols-4
                 @endswitch"
+                id="sortable-gallery-{{ $collection }}"
             >
                 @foreach($media as $item)
-                    <div 
-                        wire:sortable.item="{{ $item['id'] }}" 
-                        wire:key="media-{{ $item['id'] }}"
-                        class="relative group bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200 cursor-move"
+                    <div
+                        data-id="{{ $item['id'] }}"
+                        class="relative group bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200 sortable-item"
                     >
                         <!-- Drag Handle -->
-                        <div wire:sortable.handle class="absolute top-2 left-2 z-10 bg-gray-800 bg-opacity-75 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        <div class="absolute top-2 left-2 z-10 bg-gray-800 bg-opacity-75 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 cursor-move sortable-handle">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M7 2a2 2 0 1 1 .001 4.001A2 2 0 0 1 7 2zM7 8a2 2 0 1 1 .001 4.001A2 2 0 0 1 7 8zM7 14a2 2 0 1 1 .001 4.001A2 2 0 0 1 7 14zM13 2a2 2 0 1 1 .001 4.001A2 2 0 0 1 13 2zM13 8a2 2 0 1 1 .001 4.001A2 2 0 0 1 13 8zM13 14a2 2 0 1 1 .001 4.001A2 2 0 0 1 13 14z"></path>
                             </svg>
@@ -71,27 +72,38 @@
 </div>
 
 @if($sortable)
-    @script
+    <!-- Include SortableJS -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
     <script>
-        // Add visual feedback for sortable items
-        document.addEventListener('livewire:init', () => {
-            Livewire.hook('morph.updated', ({ el, component }) => {
-                if (component.name === 'media-gallery') {
-                    // Add sortable styling
-                    const sortableItems = el.querySelectorAll('[wire\\:sortable\\.item]');
-                    sortableItems.forEach(item => {
-                        item.addEventListener('dragstart', () => {
-                            item.classList.add('opacity-50');
+        function sortableGallery() {
+            return {
+                sortable: null,
+                initSortable() {
+                    const container = document.getElementById('sortable-gallery-{{ $collection }}');
+                    if (container && typeof Sortable !== 'undefined') {
+                        this.sortable = Sortable.create(container, {
+                            handle: '.sortable-handle',
+                            animation: 150,
+                            ghostClass: 'opacity-50',
+                            chosenClass: 'scale-105',
+                            dragClass: 'rotate-3',
+                            onEnd: (evt) => {
+                                const items = Array.from(container.children);
+                                const orderedIds = items.map(item => item.dataset.id);
+                                @this.call('updateMediaOrder', orderedIds);
+                            }
                         });
-                        item.addEventListener('dragend', () => {
-                            item.classList.remove('opacity-50');
-                        });
-                    });
+                    }
+                },
+                destroy() {
+                    if (this.sortable) {
+                        this.sortable.destroy();
+                    }
                 }
-            });
-        });
+            }
+        }
     </script>
-    @endscript
 @endif
 
 <script>

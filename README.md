@@ -14,7 +14,7 @@ A comprehensive Laravel package for handling file uploads with morphable models,
 - 🎯 **Automatic Type Detection** - Automatically categorizes files as images, documents, videos, audio, etc.
 - 📊 **Rich Metadata Storage** - Stores file size, dimensions, MIME type, checksums, and custom metadata
 - 🎨 **Beautiful Livewire Components** - Drag & drop upload interface with real-time preview
-- 🔄 **Sortable Media Gallery** - Drag and drop to reorder media files with Livewire Sortable
+- 🔄 **Sortable Media Gallery** - Drag and drop to reorder media files with SortableJS
 - 🎭 **Alpine.js Integration** - Smooth interactions and animations
 - 🎨 **Tailwind CSS Styling** - Modern, responsive design out of the box
 - ✅ **Comprehensive Testing** - Full Pest test coverage

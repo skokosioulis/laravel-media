@@ -5,8 +5,9 @@
             <div class="text-xs text-gray-500">{{ count($media) }} files</div>
         </div>
         
-        <div 
-            wire:sortable="updateOrder"
+        <div
+            x-data="sortableGallery()"
+            x-init="initSortable()"
             class="grid gap-4 @switch($columns)
                 @case(2) grid-cols-2 @break
                 @case(3) grid-cols-3 @break
@@ -15,19 +16,15 @@
                 @case(6) grid-cols-2 md:grid-cols-6 @break
                 @default grid-cols-2 md:grid-cols-4
             @endswitch"
+            id="sortable-gallery-{{ $collection }}"
         >
             @foreach($media as $item)
-                <div 
-                    wire:sortable.item="{{ $item['id'] }}" 
-                    wire:key="sortable-media-{{ $item['id'] }}"
-                    class="relative group bg-white rounded-lg shadow-sm border-2 border-dashed border-gray-300 overflow-hidden hover:shadow-md hover:border-blue-400 transition-all duration-200 cursor-move"
-                    x-data="{ isDragging: false }"
-                    x-on:dragstart="isDragging = true"
-                    x-on:dragend="isDragging = false"
-                    :class="{ 'opacity-50 scale-95': isDragging }"
+                <div
+                    data-id="{{ $item['id'] }}"
+                    class="relative group bg-white rounded-lg shadow-sm border-2 border-dashed border-gray-300 overflow-hidden hover:shadow-md hover:border-blue-400 transition-all duration-200 sortable-item"
                 >
                     <!-- Drag Handle -->
-                    <div wire:sortable.handle class="absolute top-2 left-2 z-20 bg-gray-800 bg-opacity-90 text-white p-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 cursor-grab active:cursor-grabbing">
+                    <div class="absolute top-2 left-2 z-20 bg-gray-800 bg-opacity-90 text-white p-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 cursor-grab active:cursor-grabbing sortable-handle">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M7 2a2 2 0 1 1 .001 4.001A2 2 0 0 1 7 2zM7 8a2 2 0 1 1 .001 4.001A2 2 0 0 1 7 8zM7 14a2 2 0 1 1 .001 4.001A2 2 0 0 1 7 14zM13 2a2 2 0 1 1 .001 4.001A2 2 0 0 1 13 2zM13 8a2 2 0 1 1 .001 4.001A2 2 0 0 1 13 8zM13 14a2 2 0 1 1 .001 4.001A2 2 0 0 1 13 14z"></path>
                         </svg>
@@ -159,11 +156,42 @@
     </div>
 </div>
 
+<!-- Include SortableJS -->
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
 <script>
+function sortableGallery() {
+    return {
+        sortable: null,
+        initSortable() {
+            const container = document.getElementById('sortable-gallery-{{ $collection }}');
+            if (container && typeof Sortable !== 'undefined') {
+                this.sortable = Sortable.create(container, {
+                    handle: '.sortable-handle',
+                    animation: 150,
+                    ghostClass: 'opacity-50',
+                    chosenClass: 'scale-105',
+                    dragClass: 'rotate-3',
+                    onEnd: (evt) => {
+                        const items = Array.from(container.children);
+                        const orderedIds = items.map(item => item.dataset.id);
+                        @this.call('updateOrder', orderedIds);
+                    }
+                });
+            }
+        },
+        destroy() {
+            if (this.sortable) {
+                this.sortable.destroy();
+            }
+        }
+    }
+}
+
 function openMediaModal(url, name, type) {
     const modal = document.getElementById('mediaModal');
     const content = document.getElementById('modalContent');
-    
+
     if (type === 'image') {
         content.innerHTML = `<img src="${url}" alt="${name}" class="max-w-full max-h-screen object-contain">`;
     } else if (type === 'video') {
@@ -171,7 +199,7 @@ function openMediaModal(url, name, type) {
     } else {
         content.innerHTML = `<div class="p-8 text-center"><h3 class="text-lg font-medium mb-4">${name}</h3><a href="${url}" target="_blank" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Open File</a></div>`;
     }
-    
+
     modal.classList.remove('hidden');
 }
 
