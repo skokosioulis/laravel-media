@@ -57,79 +57,79 @@
             <p class="text-gray-500">Upload some files to see them here.</p>
         </div>
     @endif
-</div>
 
-<!-- Media Modal -->
-<div id="mediaModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-75 flex items-center justify-center p-4">
-    <div class="relative max-w-4xl max-h-full">
-        <button onclick="closeMediaModal()" class="absolute top-4 right-4 text-white hover:text-gray-300 z-10">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-        </button>
-        <div id="modalContent" class="bg-white rounded-lg overflow-hidden"></div>
+    <!-- Media Modal -->
+    <div id="mediaModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-75 flex items-center justify-center p-4">
+        <div class="relative max-w-4xl max-h-full">
+            <button onclick="closeMediaModal()" class="absolute top-4 right-4 text-white hover:text-gray-300 z-10">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+            <div id="modalContent" class="bg-white rounded-lg overflow-hidden"></div>
+        </div>
     </div>
-</div>
 
-@if($sortable)
-    <!-- Include SortableJS -->
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    @if($sortable)
+        <!-- Include SortableJS -->
+        <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
-    <script>
-        function sortableGallery() {
-            return {
-                sortable: null,
-                initSortable() {
-                    const container = document.getElementById('sortable-gallery-{{ $collection }}');
-                    if (container && typeof Sortable !== 'undefined') {
-                        this.sortable = Sortable.create(container, {
-                            handle: '.sortable-handle',
-                            animation: 150,
-                            ghostClass: 'opacity-50',
-                            chosenClass: 'scale-105',
-                            dragClass: 'rotate-3',
-                            onEnd: (evt) => {
-                                const items = Array.from(container.children);
-                                const orderedIds = items.map(item => item.dataset.id);
-                                @this.call('updateMediaOrder', orderedIds);
-                            }
-                        });
-                    }
-                },
-                destroy() {
-                    if (this.sortable) {
-                        this.sortable.destroy();
+        <script>
+            function sortableGallery() {
+                return {
+                    sortable: null,
+                    initSortable() {
+                        const container = document.getElementById('sortable-gallery-{{ $collection }}');
+                        if (container && typeof Sortable !== 'undefined') {
+                            this.sortable = Sortable.create(container, {
+                                handle: '.sortable-handle',
+                                animation: 150,
+                                ghostClass: 'opacity-50',
+                                chosenClass: 'scale-105',
+                                dragClass: 'rotate-3',
+                                onEnd: (evt) => {
+                                    const items = Array.from(container.children);
+                                    const orderedIds = items.map(item => item.dataset.id);
+                                    @this.call('updateMediaOrder', orderedIds);
+                                }
+                            });
+                        }
+                    },
+                    destroy() {
+                        if (this.sortable) {
+                            this.sortable.destroy();
+                        }
                     }
                 }
             }
+        </script>
+    @endif
+
+    <script>
+    function openMediaModal(url, name, type) {
+        const modal = document.getElementById('mediaModal');
+        const content = document.getElementById('modalContent');
+
+        if (type === 'image') {
+            content.innerHTML = `<img src="${url}" alt="${name}" class="max-w-full max-h-screen object-contain">`;
+        } else if (type === 'video') {
+            content.innerHTML = `<video controls class="max-w-full max-h-screen"><source src="${url}" type="video/mp4">Your browser does not support the video tag.</video>`;
+        } else {
+            content.innerHTML = `<div class="p-8 text-center"><h3 class="text-lg font-medium mb-4">${name}</h3><a href="${url}" target="_blank" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Open File</a></div>`;
         }
+
+        modal.classList.remove('hidden');
+    }
+
+    function closeMediaModal() {
+        document.getElementById('mediaModal').classList.add('hidden');
+    }
+
+    // Close modal on escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeMediaModal();
+        }
+    });
     </script>
-@endif
-
-<script>
-function openMediaModal(url, name, type) {
-    const modal = document.getElementById('mediaModal');
-    const content = document.getElementById('modalContent');
-    
-    if (type === 'image') {
-        content.innerHTML = `<img src="${url}" alt="${name}" class="max-w-full max-h-screen object-contain">`;
-    } else if (type === 'video') {
-        content.innerHTML = `<video controls class="max-w-full max-h-screen"><source src="${url}" type="video/mp4">Your browser does not support the video tag.</video>`;
-    } else {
-        content.innerHTML = `<div class="p-8 text-center"><h3 class="text-lg font-medium mb-4">${name}</h3><a href="${url}" target="_blank" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Open File</a></div>`;
-    }
-    
-    modal.classList.remove('hidden');
-}
-
-function closeMediaModal() {
-    document.getElementById('mediaModal').classList.add('hidden');
-}
-
-// Close modal on escape key
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        closeMediaModal();
-    }
-});
-</script>
+</div>

@@ -34,6 +34,13 @@ trait HasMedia
 
     public function addMedia(UploadedFile $file, string $collection = 'default', array $metadata = []): Media
     {
+        // Validate MIME type
+        if (!Media::isMimeTypeAllowed($file->getMimeType(), $collection)) {
+            throw new \InvalidArgumentException(
+                "File type '{$file->getMimeType()}' is not allowed for collection '{$collection}'"
+            );
+        }
+
         $disk = config('media.disk', 'public');
         $directory = config('media.directory', 'media');
 
@@ -83,6 +90,13 @@ trait HasMedia
         $originalName = basename($path);
         $mimeType = mime_content_type($path);
         $size = filesize($path);
+
+        // Validate MIME type
+        if (!Media::isMimeTypeAllowed($mimeType, $collection)) {
+            throw new \InvalidArgumentException(
+                "File type '{$mimeType}' is not allowed for collection '{$collection}'"
+            );
+        }
 
         // Generate unique filename
         $fileName = $this->generateUniqueFileNameFromPath($path);

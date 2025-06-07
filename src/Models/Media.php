@@ -146,6 +146,37 @@ class Media extends Model
         return $query->where('collection_name', $collection);
     }
 
+    /**
+     * Check if a MIME type is allowed for a specific collection
+     */
+    public static function isMimeTypeAllowed(string $mimeType, string $collection = 'default'): bool
+    {
+        // Check collection-specific MIME types first
+        $collectionConfig = config("media.collections.{$collection}");
+        if ($collectionConfig && isset($collectionConfig['accepts_mime_types']) && !empty($collectionConfig['accepts_mime_types'])) {
+            return in_array($mimeType, $collectionConfig['accepts_mime_types']);
+        }
+
+        // Fall back to global allowed MIME types
+        $globalMimeTypes = config('media.upload_limits.allowed_mime_types', []);
+        return empty($globalMimeTypes) || in_array($mimeType, $globalMimeTypes);
+    }
+
+    /**
+     * Get allowed MIME types for a specific collection
+     */
+    public static function getAllowedMimeTypes(string $collection = 'default'): array
+    {
+        // Check collection-specific MIME types first
+        $collectionConfig = config("media.collections.{$collection}");
+        if ($collectionConfig && isset($collectionConfig['accepts_mime_types']) && !empty($collectionConfig['accepts_mime_types'])) {
+            return $collectionConfig['accepts_mime_types'];
+        }
+
+        // Fall back to global allowed MIME types
+        return config('media.upload_limits.allowed_mime_types', []);
+    }
+
     public function scopeImages($query)
     {
         return $query->where('type', 'image');

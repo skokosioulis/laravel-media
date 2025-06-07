@@ -4,7 +4,7 @@
             <h4 class="text-sm font-medium text-gray-700">Drag and drop to reorder</h4>
             <div class="text-xs text-gray-500">{{ count($media) }} files</div>
         </div>
-        
+
         <div
             x-data="sortableGallery()"
             x-init="initSortable()"
@@ -154,63 +154,63 @@
         </button>
         <div id="modalContent" class="bg-white rounded-lg overflow-hidden"></div>
     </div>
-</div>
 
-<!-- Include SortableJS -->
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <!-- Include SortableJS -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
-<script>
-function sortableGallery() {
-    return {
-        sortable: null,
-        initSortable() {
-            const container = document.getElementById('sortable-gallery-{{ $collection }}');
-            if (container && typeof Sortable !== 'undefined') {
-                this.sortable = Sortable.create(container, {
-                    handle: '.sortable-handle',
-                    animation: 150,
-                    ghostClass: 'opacity-50',
-                    chosenClass: 'scale-105',
-                    dragClass: 'rotate-3',
-                    onEnd: (evt) => {
-                        const items = Array.from(container.children);
-                        const orderedIds = items.map(item => item.dataset.id);
-                        @this.call('updateOrder', orderedIds);
-                    }
-                });
-            }
-        },
-        destroy() {
-            if (this.sortable) {
-                this.sortable.destroy();
+    <script>
+    function sortableGallery() {
+        return {
+            sortable: null,
+            initSortable() {
+                const container = document.getElementById('sortable-gallery-{{ $collection }}');
+                if (container && typeof Sortable !== 'undefined') {
+                    this.sortable = Sortable.create(container, {
+                        handle: '.sortable-handle',
+                        animation: 150,
+                        ghostClass: 'opacity-50',
+                        chosenClass: 'scale-105',
+                        dragClass: 'rotate-3',
+                        onEnd: (evt) => {
+                            const items = Array.from(container.children);
+                            const orderedIds = items.map(item => item.dataset.id);
+                            @this.call('updateOrder', orderedIds);
+                        }
+                    });
+                }
+            },
+            destroy() {
+                if (this.sortable) {
+                    this.sortable.destroy();
+                }
             }
         }
     }
-}
 
-function openMediaModal(url, name, type) {
-    const modal = document.getElementById('mediaModal');
-    const content = document.getElementById('modalContent');
+    function openMediaModal(url, name, type) {
+        const modal = document.getElementById('mediaModal');
+        const content = document.getElementById('modalContent');
 
-    if (type === 'image') {
-        content.innerHTML = `<img src="${url}" alt="${name}" class="max-w-full max-h-screen object-contain">`;
-    } else if (type === 'video') {
-        content.innerHTML = `<video controls class="max-w-full max-h-screen"><source src="${url}" type="video/mp4">Your browser does not support the video tag.</video>`;
-    } else {
-        content.innerHTML = `<div class="p-8 text-center"><h3 class="text-lg font-medium mb-4">${name}</h3><a href="${url}" target="_blank" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Open File</a></div>`;
+        if (type === 'image') {
+            content.innerHTML = `<img src="${url}" alt="${name}" class="max-w-full max-h-screen object-contain">`;
+        } else if (type === 'video') {
+            content.innerHTML = `<video controls class="max-w-full max-h-screen"><source src="${url}" type="video/mp4">Your browser does not support the video tag.</video>`;
+        } else {
+            content.innerHTML = `<div class="p-8 text-center"><h3 class="text-lg font-medium mb-4">${name}</h3><a href="${url}" target="_blank" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Open File</a></div>`;
+        }
+
+        modal.classList.remove('hidden');
     }
 
-    modal.classList.remove('hidden');
-}
-
-function closeMediaModal() {
-    document.getElementById('mediaModal').classList.add('hidden');
-}
-
-// Close modal on escape key
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        closeMediaModal();
+    function closeMediaModal() {
+        document.getElementById('mediaModal').classList.add('hidden');
     }
-});
-</script>
+
+    // Close modal on escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeMediaModal();
+        }
+    });
+    </script>
+</div>

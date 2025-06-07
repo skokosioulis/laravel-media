@@ -28,7 +28,9 @@ return [
     | Upload Limits
     |--------------------------------------------------------------------------
     |
-    | Configure upload limits for different file types.
+    | Configure upload limits for different file types. MIME types are used
+    | for server-side validation, while the browser accept attribute will
+    | include both MIME types and file extensions.
     |
     */
     'upload_limits' => [
@@ -40,6 +42,8 @@ return [
             'image/gif',
             'image/webp',
             'image/svg+xml',
+            'image/bmp',
+            'image/tiff',
 
             // Documents
             'application/pdf',
@@ -51,17 +55,28 @@ return [
             'application/vnd.openxmlformats-officedocument.presentationml.presentation',
             'text/plain',
             'text/csv',
+            'application/rtf',
 
             // Audio
             'audio/mpeg',
             'audio/wav',
             'audio/ogg',
+            'audio/mp4',
+            'audio/aac',
+            'audio/flac',
 
             // Video
             'video/mp4',
             'video/mpeg',
             'video/quicktime',
             'video/webm',
+            'video/avi',
+            'video/x-msvideo',
+
+            // Archives (optional)
+            'application/zip',
+            'application/x-rar-compressed',
+            'application/x-7z-compressed',
         ],
     ],
 
