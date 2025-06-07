@@ -1,0 +1,49 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('media', function (Blueprint $table) {
+            $table->id();
+
+            // Morphable relationship
+            $table->morphs('mediable');
+
+            // File information
+            $table->string('name'); // Original filename
+            $table->string('file_name'); // Stored filename
+            $table->string('mime_type');
+            $table->string('disk')->default('public');
+            $table->string('path'); // Full path to file
+            $table->unsignedBigInteger('size'); // File size in bytes
+            $table->string('type')->default('file'); // file, image, document, video, audio, etc.
+
+            // Additional metadata
+            $table->json('metadata')->nullable(); // Width, height, duration, etc.
+            $table->text('alt_text')->nullable(); // For accessibility
+            $table->text('description')->nullable();
+            $table->string('collection_name')->default('default');
+            $table->unsignedInteger('order_column')->nullable();
+
+            // File validation
+            $table->string('checksum')->nullable(); // MD5 or SHA hash
+
+            $table->timestamps();
+
+            // Indexes
+            $table->index(['mediable_type', 'mediable_id']);
+            $table->index(['collection_name']);
+            $table->index(['type']);
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('media');
+    }
+};

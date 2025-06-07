@@ -1,0 +1,123 @@
+<div class="media-gallery">
+    @if(count($media) > 0)
+        @if($sortable)
+            <!-- Sortable Mode -->
+            <div 
+                wire:sortable="updateMediaOrder"
+                class="grid gap-4 @switch($columns)
+                    @case(2) grid-cols-2 @break
+                    @case(3) grid-cols-3 @break
+                    @case(4) grid-cols-2 md:grid-cols-4 @break
+                    @case(5) grid-cols-2 md:grid-cols-5 @break
+                    @case(6) grid-cols-2 md:grid-cols-6 @break
+                    @default grid-cols-2 md:grid-cols-4
+                @endswitch"
+            >
+                @foreach($media as $item)
+                    <div 
+                        wire:sortable.item="{{ $item['id'] }}" 
+                        wire:key="media-{{ $item['id'] }}"
+                        class="relative group bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200 cursor-move"
+                    >
+                        <!-- Drag Handle -->
+                        <div wire:sortable.handle class="absolute top-2 left-2 z-10 bg-gray-800 bg-opacity-75 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M7 2a2 2 0 1 1 .001 4.001A2 2 0 0 1 7 2zM7 8a2 2 0 1 1 .001 4.001A2 2 0 0 1 7 8zM7 14a2 2 0 1 1 .001 4.001A2 2 0 0 1 7 14zM13 2a2 2 0 1 1 .001 4.001A2 2 0 0 1 13 2zM13 8a2 2 0 1 1 .001 4.001A2 2 0 0 1 13 8zM13 14a2 2 0 1 1 .001 4.001A2 2 0 0 1 13 14z"></path>
+                            </svg>
+                        </div>
+
+                        @include('laravel-media::partials.media-item', ['item' => $item, 'showInfo' => $showInfo])
+                    </div>
+                @endforeach
+            </div>
+        @else
+            <!-- Regular Mode -->
+            <div class="grid gap-4 @switch($columns)
+                @case(2) grid-cols-2 @break
+                @case(3) grid-cols-3 @break
+                @case(4) grid-cols-2 md:grid-cols-4 @break
+                @case(5) grid-cols-2 md:grid-cols-5 @break
+                @case(6) grid-cols-2 md:grid-cols-6 @break
+                @default grid-cols-2 md:grid-cols-4
+            @endswitch">
+                @foreach($media as $item)
+                    <div class="relative group bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
+                        @include('laravel-media::partials.media-item', ['item' => $item, 'showInfo' => $showInfo])
+                    </div>
+                @endforeach
+            </div>
+        @endif
+    @else
+        <div class="text-center py-12">
+            <svg class="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">No media files</h3>
+            <p class="text-gray-500">Upload some files to see them here.</p>
+        </div>
+    @endif
+</div>
+
+<!-- Media Modal -->
+<div id="mediaModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-75 flex items-center justify-center p-4">
+    <div class="relative max-w-4xl max-h-full">
+        <button onclick="closeMediaModal()" class="absolute top-4 right-4 text-white hover:text-gray-300 z-10">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+        <div id="modalContent" class="bg-white rounded-lg overflow-hidden"></div>
+    </div>
+</div>
+
+@if($sortable)
+    @script
+    <script>
+        // Add visual feedback for sortable items
+        document.addEventListener('livewire:init', () => {
+            Livewire.hook('morph.updated', ({ el, component }) => {
+                if (component.name === 'media-gallery') {
+                    // Add sortable styling
+                    const sortableItems = el.querySelectorAll('[wire\\:sortable\\.item]');
+                    sortableItems.forEach(item => {
+                        item.addEventListener('dragstart', () => {
+                            item.classList.add('opacity-50');
+                        });
+                        item.addEventListener('dragend', () => {
+                            item.classList.remove('opacity-50');
+                        });
+                    });
+                }
+            });
+        });
+    </script>
+    @endscript
+@endif
+
+<script>
+function openMediaModal(url, name, type) {
+    const modal = document.getElementById('mediaModal');
+    const content = document.getElementById('modalContent');
+    
+    if (type === 'image') {
+        content.innerHTML = `<img src="${url}" alt="${name}" class="max-w-full max-h-screen object-contain">`;
+    } else if (type === 'video') {
+        content.innerHTML = `<video controls class="max-w-full max-h-screen"><source src="${url}" type="video/mp4">Your browser does not support the video tag.</video>`;
+    } else {
+        content.innerHTML = `<div class="p-8 text-center"><h3 class="text-lg font-medium mb-4">${name}</h3><a href="${url}" target="_blank" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Open File</a></div>`;
+    }
+    
+    modal.classList.remove('hidden');
+}
+
+function closeMediaModal() {
+    document.getElementById('mediaModal').classList.add('hidden');
+}
+
+// Close modal on escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeMediaModal();
+    }
+});
+</script>
