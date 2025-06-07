@@ -2,7 +2,6 @@
 
 namespace Skokosioulis\LaravelMedia\Livewire;
 
-use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -14,17 +13,25 @@ class MediaUpload extends Component
 
     #[Validate]
     public $files = [];
-    
+
     public $model;
+
     public $modelId;
+
     public $collection = 'default';
+
     public $multiple = true;
+
     public $acceptedTypes = '';
+
     public $maxFileSize = 10240; // KB
+
     public $showPreview = true;
+
     public $sortablePreview = false;
+
     public $existingMedia = [];
-    
+
     public function mount($model = null, $modelId = null, $collection = 'default', $multiple = true, $acceptedTypes = '', $maxFileSize = null, $showPreview = true, $sortablePreview = false)
     {
         $this->model = $model;
@@ -43,7 +50,7 @@ class MediaUpload extends Component
     {
         $maxSize = $this->maxFileSize;
         $allowedMimes = implode(',', config('media.upload_limits.allowed_mime_types', []));
-        
+
         return [
             'files.*' => [
                 'required',
@@ -57,7 +64,7 @@ class MediaUpload extends Component
     public function updatedFiles()
     {
         $this->validate();
-        
+
         if ($this->model && $this->modelId) {
             $this->uploadFiles();
         }
@@ -65,16 +72,18 @@ class MediaUpload extends Component
 
     public function uploadFiles()
     {
-        if (!$this->model || !$this->modelId) {
+        if (! $this->model || ! $this->modelId) {
             $this->addError('upload', 'Model and Model ID are required for upload.');
+
             return;
         }
 
         $modelClass = $this->model;
         $modelInstance = $modelClass::find($this->modelId);
 
-        if (!$modelInstance) {
+        if (! $modelInstance) {
             $this->addError('upload', 'Model instance not found.');
+
             return;
         }
 
@@ -82,7 +91,8 @@ class MediaUpload extends Component
             try {
                 $modelInstance->addMedia($file, $this->collection);
             } catch (\Exception $e) {
-                $this->addError('upload', 'Failed to upload file: ' . $e->getMessage());
+                $this->addError('upload', 'Failed to upload file: '.$e->getMessage());
+
                 return;
             }
         }
@@ -91,14 +101,14 @@ class MediaUpload extends Component
         $this->loadExistingMedia();
         $this->dispatch('media-uploaded', [
             'collection' => $this->collection,
-            'count' => count($this->files)
+            'count' => count($this->files),
         ]);
     }
 
     public function removeFile($mediaId)
     {
         $media = Media::find($mediaId);
-        
+
         if ($media) {
             $media->delete();
             $this->loadExistingMedia();
@@ -131,11 +141,11 @@ class MediaUpload extends Component
     protected function getAcceptedTypesFromConfig()
     {
         $collectionConfig = config("media.collections.{$this->collection}");
-        
+
         if ($collectionConfig && isset($collectionConfig['accepts_mime_types'])) {
             return implode(',', $collectionConfig['accepts_mime_types']);
         }
-        
+
         return implode(',', config('media.upload_limits.allowed_mime_types', []));
     }
 
