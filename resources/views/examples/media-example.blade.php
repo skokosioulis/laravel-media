@@ -5,17 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laravel Media Package Example</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+{{--    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>--}}
     @livewireStyles
 </head>
 <body class="bg-gray-100">
     <div class="container mx-auto px-4 py-8">
         <h1 class="text-3xl font-bold text-gray-900 mb-8">Laravel Media Package Example</h1>
-        
+
         <!-- Upload Section -->
         <div class="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 class="text-xl font-semibold text-gray-800 mb-4">Upload Files</h2>
-            
+
             <!-- Example: Upload to a specific model and collection -->
             @livewire('media-upload', [
                 'model' => 'App\\Models\\User',
@@ -27,7 +27,7 @@
                 'showPreview' => true
             ])
         </div>
-        
+
         <!-- Gallery Section -->
         <div class="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 class="text-xl font-semibold text-gray-800 mb-4">Media Gallery</h2>
@@ -56,7 +56,7 @@
                 'showInfo' => true
             ])
         </div>
-        
+
         <!-- Multiple Collections Example -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Documents Collection -->
@@ -71,7 +71,7 @@
                     'showPreview' => true
                 ])
             </div>
-            
+
             <!-- Gallery Collection with Sortable Preview -->
             <div class="bg-white rounded-lg shadow-md p-6">
                 <h3 class="text-lg font-semibold text-gray-800 mb-4">Photo Gallery (Sortable)</h3>
@@ -86,11 +86,11 @@
                 ])
             </div>
         </div>
-        
+
         <!-- Usage Examples -->
         <div class="bg-white rounded-lg shadow-md p-6 mt-8">
             <h2 class="text-xl font-semibold text-gray-800 mb-4">Usage Examples</h2>
-            
+
             <div class="space-y-4">
                 <div>
                     <h3 class="text-lg font-medium text-gray-700 mb-2">1. Add HasMedia trait to your model:</h3>
@@ -99,11 +99,11 @@
 class User extends Model
 {
     use HasMedia;
-    
+
     // Your model code...
 }</code></pre>
                 </div>
-                
+
                 <div>
                     <h3 class="text-lg font-medium text-gray-700 mb-2">2. Upload files programmatically:</h3>
                     <pre class="bg-gray-100 p-4 rounded-md text-sm overflow-x-auto"><code>$user = User::find(1);
@@ -119,7 +119,7 @@ $avatars = $user->getMedia('avatars');
 $firstAvatar = $user->getFirstMedia('avatars');
 $avatarUrl = $user->getFirstMediaUrl('avatars', '/default-avatar.jpg');</code></pre>
                 </div>
-                
+
                 <div>
                     <h3 class="text-lg font-medium text-gray-700 mb-2">3. Use Livewire components in Blade:</h3>
                     <pre class="bg-gray-100 p-4 rounded-md text-sm overflow-x-auto"><code>{{-- Upload Component --}}
@@ -138,7 +138,7 @@ $avatarUrl = $user->getFirstMediaUrl('avatars', '/default-avatar.jpg');</code></
     'columns' => 6
 ])</code></pre>
                 </div>
-                
+
                 <div>
                     <h3 class="text-lg font-medium text-gray-700 mb-2">4. Query media:</h3>
                     <pre class="bg-gray-100 p-4 rounded-md text-sm overflow-x-auto"><code>// Get all images
@@ -156,7 +156,7 @@ $galleryItems = $user->media()->inCollection('gallery')->get();</code></pre>
             </div>
         </div>
     </div>
-    
+
     @livewireScripts
 </body>
 </html>

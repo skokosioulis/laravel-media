@@ -1,23 +1,25 @@
 <div class="sortable-media-gallery">
-    @if(count($media) > 0)
-        <div class="mb-4 flex items-center justify-between">
-            <h4 class="text-sm font-medium text-gray-700">Drag and drop to reorder</h4>
-            <div class="text-xs text-gray-500">{{ count($media) }} files</div>
-        </div>
+    <!-- Main Gallery Content -->
+    <div class="gallery-content">
+        @if(count($media) > 0)
+            <div class="mb-4 flex items-center justify-between">
+                <h4 class="text-sm font-medium text-gray-700">Drag and drop to reorder</h4>
+                <div class="text-xs text-gray-500">{{ count($media) }} files</div>
+            </div>
 
-        <div
-            x-data="sortableGallery()"
-            x-init="initSortable()"
-            class="grid gap-4 @switch($columns)
-                @case(2) grid-cols-2 @break
-                @case(3) grid-cols-3 @break
-                @case(4) grid-cols-2 md:grid-cols-4 @break
-                @case(5) grid-cols-2 md:grid-cols-5 @break
-                @case(6) grid-cols-2 md:grid-cols-6 @break
-                @default grid-cols-2 md:grid-cols-4
-            @endswitch"
-            id="sortable-gallery-{{ $collection }}"
-        >
+            <div
+                x-data="sortableGallery()"
+                x-init="initSortable()"
+                class="grid gap-4 @switch($columns)
+                    @case(2) grid-cols-2 @break
+                    @case(3) grid-cols-3 @break
+                    @case(4) grid-cols-2 md:grid-cols-4 @break
+                    @case(5) grid-cols-2 md:grid-cols-5 @break
+                    @case(6) grid-cols-2 md:grid-cols-6 @break
+                    @default grid-cols-2 md:grid-cols-4
+                @endswitch"
+                id="sortable-gallery-{{ $collection }}"
+            >
             @foreach($media as $item)
                 <div
                     data-id="{{ $item['id'] }}"
@@ -132,27 +134,28 @@
                     </div>
                 </div>
             @endforeach
-        </div>
-    @else
-        <div class="text-center py-12">
-            <svg class="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-            </svg>
-            <h3 class="text-lg font-medium text-gray-900 mb-2">No media files</h3>
-            <p class="text-gray-500">Upload some files to see them here.</p>
-        </div>
-    @endif
-</div>
+            </div>
+        @else
+            <div class="text-center py-12">
+                <svg class="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">No media files</h3>
+                <p class="text-gray-500">Upload some files to see them here.</p>
+            </div>
+        @endif
+    </div>
 
-<!-- Media Modal -->
-<div id="mediaModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-75 flex items-center justify-center p-4">
-    <div class="relative max-w-4xl max-h-full">
-        <button onclick="closeMediaModal()" class="absolute top-4 right-4 text-white hover:text-gray-300 z-10">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-        </button>
-        <div id="modalContent" class="bg-white rounded-lg overflow-hidden"></div>
+    <!-- Media Modal -->
+    <div id="mediaModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-75 flex items-center justify-center p-4">
+        <div class="relative max-w-4xl max-h-full">
+            <button onclick="closeMediaModal()" class="absolute top-4 right-4 text-white hover:text-gray-300 z-10">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+            <div id="modalContent" class="bg-white rounded-lg overflow-hidden"></div>
+        </div>
     </div>
 
     <!-- Include SortableJS -->

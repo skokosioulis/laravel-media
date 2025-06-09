@@ -1,10 +1,18 @@
 {
     "name": "skokosioulis/laravel-media",
-    "description": "This is my package laravel-media",
+    "description": "A comprehensive Laravel package for handling file uploads, media management, and gallery functionality with Livewire components",
     "keywords": [
         "skokosioulis",
         "laravel",
-        "laravel-media"
+        "laravel-media",
+        "media",
+        "upload",
+        "file-upload",
+        "gallery",
+        "livewire",
+        "file-management",
+        "image-upload",
+        "media-library"
     ],
     "homepage": "https://github.com/skokosioulis/laravel-media",
     "license": "MIT",
@@ -22,10 +30,12 @@
         "livewire/livewire": "^3.0"
     },
     "require-dev": {
+        "larastan/larastan": "^2.9||^3.0",
         "laravel/pint": "^1.14",
         "nunomaduro/collision": "^8.1.1||^7.10.0",
-        "larastan/larastan": "^2.9||^3.0",
-        "orchestra/testbench": "^10.0.0||^9.0.0||^8.22.0",
+        "orchestra/testbench": "*",
+        "orchestra/testbench-core": "^10.3",
+        "orchestra/workbench": "*",
         "pestphp/pest": "^3.0",
         "pestphp/pest-plugin-arch": "^3.0",
         "pestphp/pest-plugin-laravel": "^3.0",
@@ -42,16 +52,46 @@
     "autoload-dev": {
         "psr-4": {
             "Skokosioulis\\LaravelMedia\\Tests\\": "tests/",
-            "Workbench\\App\\": "workbench/app/"
+            "Workbench\\App\\": "workbench/app/",
+            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
+            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
         }
     },
     "scripts": {
-        "post-autoload-dump": "@composer run prepare",
+        "post-autoload-dump": [
+            "@clear",
+            "@prepare",
+            "@composer run prepare"
+        ],
         "prepare": "@php vendor/bin/testbench package:discover --ansi",
         "analyse": "vendor/bin/phpstan analyse",
         "test": "vendor/bin/pest",
         "test-coverage": "vendor/bin/pest --coverage",
-        "format": "vendor/bin/pint"
+        "format": "vendor/bin/pint",
+        "workbench:setup": [
+            "@php setup-workbench.php",
+            "@php vendor/bin/testbench migrate --path=database/migrations"
+        ],
+        "workbench:serve": "@php vendor/bin/testbench serve",
+        "workbench:reset": [
+            "cd workbench && php -r \"if(file_exists('database/database.sqlite')) unlink('database/database.sqlite'); touch('database/database.sqlite');\"",
+            "@php vendor/bin/testbench migrate --path=database/migrations"
+        ],
+        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+        "build": "@php vendor/bin/testbench workbench:build --ansi",
+        "serve": [
+            "Composer\\Config::disableProcessTimeout",
+            "@build",
+            "@php vendor/bin/testbench serve --ansi"
+        ],
+        "dev-serve": [
+            "@php serve.php",
+            "php -S localhost:8000 -t workbench/public"
+        ],
+        "lint": [
+            "@php vendor/bin/pint --ansi",
+            "@php vendor/bin/phpstan analyse --verbose --ansi"
+        ]
     },
     "config": {
         "sort-packages": true,

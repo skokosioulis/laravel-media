@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+    public function up(): void
     {
         Schema::create('media', function (Blueprint $table) {
             $table->id();
@@ -30,19 +30,23 @@ return new class extends Migration
             $table->string('collection_name')->default('default');
             $table->unsignedInteger('order_column')->nullable();
 
-            // File validation
+            // File validation and security
             $table->string('checksum')->nullable(); // MD5 or SHA hash
+            $table->string('uuid')->nullable(); // UUID for public access
 
+            // Soft deletes for better data management
+            $table->softDeletes();
             $table->timestamps();
 
-            // Indexes
-            $table->index(['mediable_type', 'mediable_id']);
+            // Indexes for better performance
             $table->index(['collection_name']);
             $table->index(['type']);
+            $table->index(['created_at']);
+            $table->unique(['uuid']);
         });
     }
 
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('media');
     }

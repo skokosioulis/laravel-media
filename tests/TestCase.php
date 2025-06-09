@@ -34,6 +34,41 @@ class TestCase extends Orchestra
             'database' => ':memory:',
             'prefix' => '',
         ]);
+
+        // Set up storage paths for testing
+        $tempDir = $this->getTempDirectory();
+
+        // Create necessary directories
+        $directories = [
+            $tempDir.'/views',
+            $tempDir.'/cache',
+            $tempDir.'/framework',
+            $tempDir.'/framework/cache',
+            $tempDir.'/framework/sessions',
+            $tempDir.'/framework/testing',
+            $tempDir.'/framework/views',
+            $tempDir.'/app',
+            $tempDir.'/logs'
+        ];
+
+        foreach ($directories as $dir) {
+            if (!is_dir($dir)) {
+                mkdir($dir, 0755, true);
+            }
+        }
+
+        // Set up configuration
+        config()->set('view.compiled', $tempDir.'/views');
+        config()->set('cache.stores.file.path', $tempDir.'/cache');
+        config()->set('app.key', 'base64:SGVsbG9Xb3JsZEhlbGxvV29ybGRIZWxsb1dvcmxkSGVsbG9Xb3JsZA==');
+
+        // Override storage path
+        $app->useStoragePath($tempDir);
+    }
+
+    protected function getTempDirectory(): string
+    {
+        return __DIR__.'/temp';
     }
 
     protected function defineDatabaseMigrations()
