@@ -21,7 +21,7 @@
                 <img
                     src="{{ $media['url'] }}"
                     alt="{{ $media['alt_text'] ?? $media['name'] }}"
-                    class="w-full h-full object-cover cursor-pointer"
+                    class="size-16 flex-none rounded-lg bg-gray-50"
                 >
             @elseif($media['type'] === 'video')
                 <div class="w-full h-full flex items-center justify-center bg-gray-900 cursor-pointer">
