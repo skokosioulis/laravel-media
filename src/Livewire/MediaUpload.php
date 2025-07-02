@@ -165,7 +165,6 @@ class MediaUpload extends Component
     public function updatedFiles()
     {
 
-
         $this->validate();
         if ($this->model && $this->modelId) {
             $this->uploadFiles();
@@ -185,8 +184,9 @@ class MediaUpload extends Component
         // Handle both string class names and actual class instances
         if (is_string($modelClass)) {
             // Ensure the class exists
-            if (!class_exists($modelClass)) {
+            if (! class_exists($modelClass)) {
                 $this->addError('upload', "Model class '{$modelClass}' not found.");
+
                 return;
             }
             $modelInstance = $modelClass::find($this->modelId);
@@ -249,8 +249,9 @@ class MediaUpload extends Component
             // Handle both string class names and actual class instances
             if (is_string($modelClass)) {
                 // Ensure the class exists
-                if (!class_exists($modelClass)) {
+                if (! class_exists($modelClass)) {
                     $this->addError('model', "Model class '{$modelClass}' not found.");
+
                     return;
                 }
                 $modelInstance = $modelClass::find($this->modelId);
@@ -283,14 +284,16 @@ class MediaUpload extends Component
     {
         $media = Media::find($mediaId);
 
-        if (!$media) {
+        if (! $media) {
             $this->addError('media', 'Media not found.');
+
             return;
         }
 
         // Check if the media belongs to the current model
         if ($media->mediable_type !== $this->model || $media->mediable_id != $this->modelId) {
             $this->addError('media', 'Unauthorized to update this media.');
+
             return;
         }
 
@@ -301,7 +304,7 @@ class MediaUpload extends Component
 
         $this->dispatch('media-description-updated', [
             'mediaId' => $mediaId,
-            'description' => $description
+            'description' => $description,
         ]);
     }
 

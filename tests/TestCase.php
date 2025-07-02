@@ -48,11 +48,11 @@ class TestCase extends Orchestra
             $tempDir.'/framework/testing',
             $tempDir.'/framework/views',
             $tempDir.'/app',
-            $tempDir.'/logs'
+            $tempDir.'/logs',
         ];
 
         foreach ($directories as $dir) {
-            if (!is_dir($dir)) {
+            if (! is_dir($dir)) {
                 mkdir($dir, 0755, true);
             }
         }

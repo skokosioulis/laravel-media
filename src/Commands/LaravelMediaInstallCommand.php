@@ -56,10 +56,11 @@ class LaravelMediaInstallCommand extends Command
     protected function publishConfig(): void
     {
         $configPath = config_path('media.php');
-        
+
         if (File::exists($configPath) && ! $this->option('force')) {
             if (! $this->confirm('Config file already exists. Do you want to overwrite it?', false)) {
                 $this->line('Skipping config file...');
+
                 return;
             }
         }
