@@ -5,13 +5,13 @@
         originalDescription: '<?php echo e($media['description'] ?? ''); ?>'
     }">
     <!-- Drag Handle (only show if sortable) -->
-    <!--[if BLOCK]><![endif]--><?php if($sortablePreview ?? false): ?>
+    <!--[if BLOCK]><![endif]--><?php if ($sortablePreview ?? false) { ?>
         <div class="flex-shrink-0 cursor-move sortable-handle opacity-50 hover:opacity-100 transition-opacity duration-200 mr-2">
             <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M7 2a2 2 0 1 1 .001 4.001A2 2 0 0 1 7 2zM7 8a2 2 0 1 1 .001 4.001A2 2 0 0 1 7 8zM7 14a2 2 0 1 1 .001 4.001A2 2 0 0 1 7 14zM13 2a2 2 0 1 1 .001 4.001A2 2 0 0 1 13 2zM13 8a2 2 0 1 1 .001 4.001A2 2 0 0 1 13 8zM13 14a2 2 0 1 1 .001 4.001A2 2 0 0 1 13 14z"></path>
             </svg>
         </div>
-    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+    <?php } ?><!--[if ENDBLOCK]><![endif]-->
 
     <div class="flex min-w-0 w-full gap-x-4 items-center">
         <img class="size-16 flex-none rounded-lg bg-gray-50"
