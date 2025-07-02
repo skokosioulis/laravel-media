@@ -25,15 +25,16 @@
     ],
     "require": {
         "php": "^8.4",
-        "spatie/laravel-package-tools": "^1.16",
         "illuminate/contracts": "^10.0||^11.0||^12.0",
-        "livewire/livewire": "^3.0"
+        "livewire/livewire": "^3.0",
+        "phpoffice/phpspreadsheet": "^4.4",
+        "spatie/laravel-package-tools": "^1.16"
     },
     "require-dev": {
         "larastan/larastan": "^2.9||^3.0",
         "laravel/pint": "^1.14",
         "nunomaduro/collision": "^8.1.1||^7.10.0",
-        "orchestra/testbench": "*",
+        "orchestra/testbench": "^10.4",
         "orchestra/testbench-core": "^10.3",
         "orchestra/workbench": "*",
         "pestphp/pest": "^3.0",
@@ -68,25 +69,12 @@
         "test": "vendor/bin/pest",
         "test-coverage": "vendor/bin/pest --coverage",
         "format": "vendor/bin/pint",
-        "workbench:setup": [
-            "@php setup-workbench.php",
-            "@php vendor/bin/testbench migrate --path=database/migrations"
-        ],
-        "workbench:serve": "@php vendor/bin/testbench serve",
-        "workbench:reset": [
-            "cd workbench && php -r \"if(file_exists('database/database.sqlite')) unlink('database/database.sqlite'); touch('database/database.sqlite');\"",
-            "@php vendor/bin/testbench migrate --path=database/migrations"
-        ],
         "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
         "build": "@php vendor/bin/testbench workbench:build --ansi",
         "serve": [
             "Composer\\Config::disableProcessTimeout",
             "@build",
             "@php vendor/bin/testbench serve --ansi"
-        ],
-        "dev-serve": [
-            "@php serve.php",
-            "php -S localhost:8000 -t workbench/public"
         ],
         "lint": [
             "@php vendor/bin/pint --ansi",

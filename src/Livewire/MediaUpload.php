@@ -28,11 +28,11 @@ class MediaUpload extends Component
 
     public $showPreview = true;
 
-    public $sortablePreview = false;
+    public $sortablePreview = true;
 
     public $existingMedia = [];
 
-    public function mount($model = null, $modelId = null, $collection = 'default', $multiple = true, $acceptedTypes = '', $maxFileSize = null, $showPreview = true, $sortablePreview = false)
+    public function mount($model = null, $modelId = null, $collection = 'default', $multiple = true, $acceptedTypes = '', $maxFileSize = null, $showPreview = true, $sortablePreview = true)
     {
         $this->model = $model;
         $this->modelId = $modelId;
@@ -164,8 +164,9 @@ class MediaUpload extends Component
 
     public function updatedFiles()
     {
-        $this->validate();
 
+
+        $this->validate();
         if ($this->model && $this->modelId) {
             $this->uploadFiles();
         }
@@ -180,7 +181,18 @@ class MediaUpload extends Component
         }
 
         $modelClass = $this->model;
-        $modelInstance = $modelClass::find($this->modelId);
+
+        // Handle both string class names and actual class instances
+        if (is_string($modelClass)) {
+            // Ensure the class exists
+            if (!class_exists($modelClass)) {
+                $this->addError('upload', "Model class '{$modelClass}' not found.");
+                return;
+            }
+            $modelInstance = $modelClass::find($this->modelId);
+        } else {
+            $modelInstance = $modelClass::find($this->modelId);
+        }
 
         if (! $modelInstance) {
             $this->addError('upload', 'Model instance not found.');
@@ -188,9 +200,11 @@ class MediaUpload extends Component
             return;
         }
 
+        $uploadedCount = 0;
         foreach ($this->files as $file) {
             try {
                 $modelInstance->addMedia($file, $this->collection);
+                $uploadedCount++;
             } catch (\Exception $e) {
                 $this->addError('upload', 'Failed to upload file: '.$e->getMessage());
 
@@ -202,7 +216,7 @@ class MediaUpload extends Component
         $this->loadExistingMedia();
         $this->dispatch('media-uploaded', [
             'collection' => $this->collection,
-            'count' => count($this->files),
+            'count' => $uploadedCount,
         ]);
     }
 
@@ -231,7 +245,18 @@ class MediaUpload extends Component
     {
         if ($this->model && $this->modelId) {
             $modelClass = $this->model;
-            $modelInstance = $modelClass::find($this->modelId);
+
+            // Handle both string class names and actual class instances
+            if (is_string($modelClass)) {
+                // Ensure the class exists
+                if (!class_exists($modelClass)) {
+                    $this->addError('model', "Model class '{$modelClass}' not found.");
+                    return;
+                }
+                $modelInstance = $modelClass::find($this->modelId);
+            } else {
+                $modelInstance = $modelClass::find($this->modelId);
+            }
 
             if ($modelInstance) {
                 $this->existingMedia = $modelInstance->getMedia($this->collection)->toArray();
@@ -252,6 +277,32 @@ class MediaUpload extends Component
         }, $extensions));
 
         return implode(',', $acceptTypes);
+    }
+
+    public function updateMediaDescription($mediaId, $description)
+    {
+        $media = Media::find($mediaId);
+
+        if (!$media) {
+            $this->addError('media', 'Media not found.');
+            return;
+        }
+
+        // Check if the media belongs to the current model
+        if ($media->mediable_type !== $this->model || $media->mediable_id != $this->modelId) {
+            $this->addError('media', 'Unauthorized to update this media.');
+            return;
+        }
+
+        $media->update(['description' => $description]);
+
+        // Refresh the existing media list
+        $this->loadExistingMedia();
+
+        $this->dispatch('media-description-updated', [
+            'mediaId' => $mediaId,
+            'description' => $description
+        ]);
     }
 
     public function render()

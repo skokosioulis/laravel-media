@@ -324,3 +324,50 @@ it('can update media order in upload component with sortable preview', function 
     expect($media2->fresh()->order_column)->toBe(1);
     expect($media1->fresh()->order_column)->toBe(2);
 });
+
+it('can update media description', function () {
+    $model = TestModelForLivewire::create(['name' => 'Test Model']);
+
+    // Create a media file
+    $file = UploadedFile::fake()->image('test.jpg');
+    $media = $model->addMedia($file, 'default');
+
+    // Test updating description through Livewire component
+    Livewire::test(MediaUpload::class, [
+        'model' => TestModelForLivewire::class,
+        'modelId' => $model->id,
+        'collection' => 'default'
+    ])
+    ->call('updateMediaDescription', $media->id, 'Updated description')
+    ->assertHasNoErrors()
+    ->assertDispatched('media-description-updated', [
+        'mediaId' => $media->id,
+        'description' => 'Updated description'
+    ]);
+
+    // Verify the description was updated in the database
+    $media->refresh();
+    expect($media->description)->toBe('Updated description');
+});
+
+it('prevents updating description of unauthorized media', function () {
+    $model1 = TestModelForLivewire::create(['name' => 'Test Model 1']);
+    $model2 = TestModelForLivewire::create(['name' => 'Test Model 2']);
+
+    // Create media for model1
+    $file = UploadedFile::fake()->image('test.jpg');
+    $media = $model1->addMedia($file, 'default');
+
+    // Try to update description from model2's context
+    Livewire::test(MediaUpload::class, [
+        'model' => TestModelForLivewire::class,
+        'modelId' => $model2->id,
+        'collection' => 'default'
+    ])
+    ->call('updateMediaDescription', $media->id, 'Unauthorized update')
+    ->assertHasErrors(['media']);
+
+    // Verify the description was not updated
+    $media->refresh();
+    expect($media->description)->toBeNull();
+});

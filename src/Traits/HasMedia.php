@@ -75,6 +75,7 @@ trait HasMedia
             'collection_name' => $collection,
             'order_column' => $orderColumn,
             'checksum' => $checksum,
+            'uuid' => Str::uuid(),
         ]);
     }
 
@@ -126,6 +127,7 @@ trait HasMedia
             'collection_name' => $collection,
             'order_column' => $orderColumn,
             'checksum' => $checksum,
+            'uuid' => Str::uuid(),
         ]);
     }
 
@@ -209,8 +211,11 @@ trait HasMedia
 
     protected function getNextOrderColumn(string $collection): int
     {
-        $lastMedia = $this->media()->inCollection($collection)->orderBy('order_column', 'desc')->first();
+        // Get the maximum order column for this collection
+        $maxOrder = $this->media()
+            ->inCollection($collection)
+            ->max('order_column');
 
-        return $lastMedia ? $lastMedia->order_column + 1 : 1;
+        return $maxOrder ? $maxOrder + 1 : 1;
     }
 }

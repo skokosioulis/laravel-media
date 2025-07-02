@@ -9,7 +9,7 @@
                  const files = Array.from(e.dataTransfer.files);
                  if (files.length > 0) {
                      // Use Livewire's uploadMultiple method for drag and drop
-                     @this.uploadMultiple('files', files);
+                     window.Livewire.find('<?php echo e($_instance->getId()); ?>').uploadMultiple('files', files);
                  }
              }
          }"
@@ -27,24 +27,25 @@
             </div>
 
             <div>
-                <label for="file-upload-{{ $collection }}" class="cursor-pointer">
+                <label for="file-upload-<?php echo e($collection); ?>" class="cursor-pointer">
                     <span class="text-sm font-medium text-gray-700">
-                        Click to upload {{ $multiple ? 'files' : 'a file' }} or drag and drop
+                        Click to upload <?php echo e($multiple ? 'files' : 'a file'); ?> or drag and drop
                     </span>
                     <input
-                        id="file-upload-{{ $collection }}"
+                        id="file-upload-<?php echo e($collection); ?>"
                         type="file"
                         class="sr-only"
                         wire:model="files"
-                        @if($multiple) multiple @endif
-                        @if($acceptedTypes) accept="{{ $acceptedTypes }}" @endif
+                        <?php if($multiple): ?> multiple <?php endif; ?>
+                        <?php if($acceptedTypes): ?> accept="<?php echo e($acceptedTypes); ?>" <?php endif; ?>
                     >
                 </label>
                 <p class="text-xs text-gray-500 mt-1">
-                    @if($acceptedTypes)
-                        Accepted types: {{ str_replace(',', ', ', $acceptedTypes) }}
-                    @endif
-                    Max size: {{ number_format($maxFileSize / 1024, 1) }}MB
+                    <!--[if BLOCK]><![endif]--><?php if($acceptedTypes): ?>
+                        Accepted types: <?php echo e(str_replace(',', ', ', $acceptedTypes)); ?>
+
+                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                    Max size: <?php echo e(number_format($maxFileSize / 1024, 1)); ?>MB
                 </p>
             </div>
         </div>
@@ -61,7 +62,7 @@
     </div>
 
     <!-- Error Messages -->
-    @if ($errors->any())
+    <!--[if BLOCK]><![endif]--><?php if($errors->any()): ?>
         <div class="mt-4 bg-red-50 border border-red-200 rounded-md p-4">
             <div class="flex">
                 <div class="flex-shrink-0">
@@ -75,27 +76,27 @@
                     <h3 class="text-sm font-medium text-red-800">Upload Error</h3>
                     <div class="mt-2 text-sm text-red-700">
                         <ul class="list-disc pl-5 space-y-1">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
+                            <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <li><?php echo e($error); ?></li>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
-    @endif
+    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
     <!-- Existing Media Preview -->
-    @if($showPreview && count($existingMedia) > 0)
+    <!--[if BLOCK]><![endif]--><?php if($showPreview && count($existingMedia) > 0): ?>
 
         <ul role="list" class="divide-y divide-gray-100 w-full">
-            @foreach($existingMedia as $media)
-                @include('laravel-media::partials.upload-media-item', ['media' => $media])
-            @endforeach
+            <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $existingMedia; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $media): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <?php echo $__env->make('laravel-media::partials.upload-media-item', ['media' => $media], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
         </ul>
-    @endif
+    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
-    @if($sortablePreview)
+    <!--[if BLOCK]><![endif]--><?php if($sortablePreview): ?>
         <!-- Include SortableJS -->
         <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
@@ -104,7 +105,7 @@
                 return {
                     sortable: null,
                     initSortable() {
-                        const container = document.getElementById('sortable-upload-{{ $collection }}');
+                        const container = document.getElementById('sortable-upload-<?php echo e($collection); ?>');
                         if (container && typeof Sortable !== 'undefined') {
                             this.sortable = Sortable.create(container, {
                                 handle: '.sortable-handle',
@@ -114,7 +115,7 @@
                                 onEnd: (evt) => {
                                     const items = Array.from(container.children);
                                     const orderedIds = items.map(item => item.dataset.id);
-                                    @this.
+                                    window.Livewire.find('<?php echo e($_instance->getId()); ?>').
                                     call('updateMediaOrder', orderedIds);
                                 }
                             });
@@ -128,4 +129,5 @@
                 }
             }
         </script>
-@endif
+<?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+<?php /**PATH C:\Users\User\Herd\laravel-media\src/../resources/views/livewire/media-upload.blade.php ENDPATH**/ ?>

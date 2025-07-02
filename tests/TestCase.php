@@ -60,7 +60,8 @@ class TestCase extends Orchestra
         // Set up configuration
         config()->set('view.compiled', $tempDir.'/views');
         config()->set('cache.stores.file.path', $tempDir.'/cache');
-        config()->set('app.key', 'base64:SGVsbG9Xb3JsZEhlbGxvV29ybGRIZWxsb1dvcmxkSGVsbG9Xb3JsZA==');
+        config()->set('app.key', 'base64:z6IHu63UVM3FPNFj/QPBWbEjVHiu/hda9lDw7ua4bhs=');
+        config()->set('app.cipher', 'AES-256-CBC');
 
         // Override storage path
         $app->useStoragePath($tempDir);
