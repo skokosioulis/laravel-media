@@ -8,7 +8,7 @@
     @if($sortablePreview ?? false)
         <div
             class="flex-shrink-0 cursor-move sortable-handle opacity-70 hover:opacity-100 transition-opacity duration-200 mr-2">
-            <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+            <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                 <path
                     d="M7 2a2 2 0 1 1 .001 4.001A2 2 0 0 1 7 2zM7 8a2 2 0 1 1 .001 4.001A2 2 0 0 1 7 8zM7 14a2 2 0 1 1 .001 4.001A2 2 0 0 1 7 14zM13 2a2 2 0 1 1 .001 4.001A2 2 0 0 1 13 2zM13 8a2 2 0 1 1 .001 4.001A2 2 0 0 1 13 8zM13 14a2 2 0 1 1 .001 4.001A2 2 0 0 1 13 14z"></path>
             </svg>
@@ -21,7 +21,7 @@
                 <img
                     src="{{ $media['url'] }}"
                     alt="{{ $media['alt_text'] ?? $media['name'] }}"
-                    class="size-16 flex-none rounded-lg bg-gray-50"
+                    class="size-20 flex-none rounded-lg bg-gray-50"
                 >
             @elseif($media['type'] === 'video')
                 <div class="w-full h-full flex items-center justify-center bg-gray-900 cursor-pointer">
@@ -34,24 +34,24 @@
                 </div>
             @else
                 <div class="w-full h-full flex items-center justify-center">
-                    <div class="text-center p-2">
+                    <div class="text-center ">
                         @switch($media['type'])
                             @case('document')
-                                <svg class="w-10 h-10 text-gray-500 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
+                                <svg class="w-9 h-9 text-gray-500 mx-auto mb-1" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
                                 </svg>
                                 @break
                             @case('audio')
-                                <svg class="w-10 h-10 text-gray-500 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
+                                <svg class="w-10 h-10 text-gray-500 mx-auto mb-1" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217z" clip-rule="evenodd" />
                                 </svg>
                                 @break
                             @default
-                                <svg class="w-10 h-10 text-gray-500 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
+                                <svg class="w-10 h-10 text-gray-500 mx-auto mb-1" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd" />
                                 </svg>
                         @endswitch
-                        <p class="text-xs text-gray-500 font-medium">{{ strtoupper($media['type']) }}</p>
+                        <p class="text-xs text-gray-500 font-medium">{{ strtoupper($media['type']) }} {{strtoupper($media['extension'])}}</p>
                     </div>
                 </div>
             @endif
