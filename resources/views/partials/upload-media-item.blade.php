@@ -41,7 +41,7 @@
                         class="flex-1 text-sm border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         placeholder="Enter description..."
                         x-ref="descriptionInput">
-                    <button
+                    <div
                         @click="
                             $wire.updateMediaDescription({{ $media['id'] }}, description);
                             editingDescription = false;
@@ -52,8 +52,8 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="M5 13l4 4L19 7"></path>
                         </svg>
-                    </button>
-                    <button
+                    </div>
+                    <div
                         @click="
                             description = originalDescription;
                             editingDescription = false;
@@ -63,7 +63,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
-                    </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -95,13 +95,13 @@
             </div>
         @endif
 
-        <button
+        <div
             wire:click="removeFile({{ $media['id'] }})"
             class="bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center duration-200 hover:bg-red-600"
             onclick="return confirm('Are you sure you want to delete this file?')">
             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
-        </button>
+        </div>
     </div>
 </li>
