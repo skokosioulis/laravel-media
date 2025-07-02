@@ -81,7 +81,7 @@
                     @livewire('media-upload', [
                         'model' => \Workbench\App\Models\User::class,
                         'modelId' => $user->id,
-                        'collection' => 'avatars',
+                        'collection' => 'photos',
                         'multiple' => true,
                         'showPreview' => true,
                         'sortablePreview' => true

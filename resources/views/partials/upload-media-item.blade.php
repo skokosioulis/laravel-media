@@ -16,8 +16,48 @@
     @endif
 
     <div class="flex min-w-0 w-full gap-x-4 items-center">
-        <img class="size-16 flex-none rounded-lg bg-gray-50"
-             src="{{ $media['url'] }}" alt="{{ $media['alt_text'] ?? $media['name'] }}"/>
+        <div class="aspect-square bg-gray-100 rounded-lg">
+            @if($media['type'] === 'image')
+                <img
+                    src="{{ $media['url'] }}"
+                    alt="{{ $media['alt_text'] ?? $media['name'] }}"
+                    class="w-full h-full object-cover cursor-pointer"
+                >
+            @elseif($media['type'] === 'video')
+                <div class="w-full h-full flex items-center justify-center bg-gray-900 cursor-pointer">
+                    <div class="text-center text-white">
+                        <svg class="w-12 h-12 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+                        </svg>
+                        <p class="text-sm">Video</p>
+                    </div>
+                </div>
+            @else
+                <div class="w-full h-full flex items-center justify-center">
+                    <div class="text-center p-2">
+                        @switch($media['type'])
+                            @case('document')
+                                <svg class="w-10 h-10 text-gray-500 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
+                                </svg>
+                                @break
+                            @case('audio')
+                                <svg class="w-10 h-10 text-gray-500 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217z" clip-rule="evenodd" />
+                                </svg>
+                                @break
+                            @default
+                                <svg class="w-10 h-10 text-gray-500 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd" />
+                                </svg>
+                        @endswitch
+                        <p class="text-xs text-gray-500 font-medium">{{ strtoupper($media['type']) }}</p>
+                    </div>
+                </div>
+            @endif
+        </div>
+{{--        <img class="size-16 flex-none rounded-lg bg-gray-50"--}}
+{{--             src="{{ $media['url'] }}" alt="{{ $media['alt_text'] ?? $media['name'] }}"/>--}}
         <div class="min-w-0 grow w-full flex-auto items-center  ">
             <div x-cloak>
                 <span class="  font-bold truncate text-xs/5  ">  {{ $media['name'] }}  </span>
