@@ -17,7 +17,7 @@ class MediaController extends Controller
     public function upload(Request $request): JsonResponse
     {
         $request->validate([
-            'file' => 'required|file|max:' . config('media.upload_limits.max_file_size', 10240),
+            'file' => 'required|file|max:'.config('media.upload_limits.max_file_size', 10240),
         ]);
 
         try {
@@ -27,7 +27,7 @@ class MediaController extends Controller
 
             // Store the file
             $path = $file->store($directory, $disk);
-            
+
             // Create media record
             $media = Media::create([
                 'name' => $file->getClientOriginalName(),
@@ -76,7 +76,7 @@ class MediaController extends Controller
         ]);
 
         $media->update($request->only([
-            'name', 'alt_text', 'description', 'collection_name'
+            'name', 'alt_text', 'description', 'collection_name',
         ]));
 
         return response()->json([
@@ -94,7 +94,7 @@ class MediaController extends Controller
         try {
             // Delete the physical file
             Storage::disk($media->disk)->delete($media->path);
-            
+
             // Delete the database record
             $media->delete();
 
@@ -123,7 +123,7 @@ class MediaController extends Controller
 
         try {
             $media = Media::whereIn('id', $request->ids)->get();
-            
+
             foreach ($media as $item) {
                 Storage::disk($item->disk)->delete($item->path);
                 $item->delete();
@@ -148,14 +148,14 @@ class MediaController extends Controller
     public function serve(Media $media): Response
     {
         $path = Storage::disk($media->disk)->path($media->path);
-        
-        if (!file_exists($path)) {
+
+        if (! file_exists($path)) {
             abort(404);
         }
 
         return response()->file($path, [
             'Content-Type' => $media->mime_type,
-            'Content-Disposition' => 'inline; filename="' . $media->name . '"',
+            'Content-Disposition' => 'inline; filename="'.$media->name.'"',
         ]);
     }
 
@@ -164,17 +164,17 @@ class MediaController extends Controller
      */
     public function thumbnail(Media $media, Request $request): Response
     {
-        if (!str_starts_with($media->mime_type, 'image/')) {
+        if (! str_starts_with($media->mime_type, 'image/')) {
             abort(404, 'Thumbnails are only available for images');
         }
 
         $width = $request->get('w', 150);
         $height = $request->get('h', 150);
-        
+
         // This is a simplified example - you might want to use a proper image manipulation library
         $path = Storage::disk($media->disk)->path($media->path);
-        
-        if (!file_exists($path)) {
+
+        if (! file_exists($path)) {
             abort(404);
         }
 
@@ -191,31 +191,31 @@ class MediaController extends Controller
         if (str_starts_with($mimeType, 'image/')) {
             return 'image';
         }
-        
+
         if (str_starts_with($mimeType, 'video/')) {
             return 'video';
         }
-        
+
         if (str_starts_with($mimeType, 'audio/')) {
             return 'audio';
         }
-        
+
         if (str_contains($mimeType, 'pdf')) {
             return 'document';
         }
-        
+
         if (str_contains($mimeType, 'word') || str_contains($mimeType, 'document')) {
             return 'document';
         }
-        
+
         if (str_contains($mimeType, 'sheet') || str_contains($mimeType, 'excel')) {
             return 'spreadsheet';
         }
-        
+
         if (str_contains($mimeType, 'presentation') || str_contains($mimeType, 'powerpoint')) {
             return 'presentation';
         }
-        
+
         return 'file';
     }
 }

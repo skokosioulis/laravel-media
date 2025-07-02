@@ -336,14 +336,14 @@ it('can update media description', function () {
     Livewire::test(MediaUpload::class, [
         'model' => TestModelForLivewire::class,
         'modelId' => $model->id,
-        'collection' => 'default'
+        'collection' => 'default',
     ])
-    ->call('updateMediaDescription', $media->id, 'Updated description')
-    ->assertHasNoErrors()
-    ->assertDispatched('media-description-updated', [
-        'mediaId' => $media->id,
-        'description' => 'Updated description'
-    ]);
+        ->call('updateMediaDescription', $media->id, 'Updated description')
+        ->assertHasNoErrors()
+        ->assertDispatched('media-description-updated', [
+            'mediaId' => $media->id,
+            'description' => 'Updated description',
+        ]);
 
     // Verify the description was updated in the database
     $media->refresh();
@@ -362,10 +362,10 @@ it('prevents updating description of unauthorized media', function () {
     Livewire::test(MediaUpload::class, [
         'model' => TestModelForLivewire::class,
         'modelId' => $model2->id,
-        'collection' => 'default'
+        'collection' => 'default',
     ])
-    ->call('updateMediaDescription', $media->id, 'Unauthorized update')
-    ->assertHasErrors(['media']);
+        ->call('updateMediaDescription', $media->id, 'Unauthorized update')
+        ->assertHasErrors(['media']);
 
     // Verify the description was not updated
     $media->refresh();

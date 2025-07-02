@@ -2,7 +2,6 @@
 
 namespace Skokosioulis\LaravelMedia\Tests\Feature;
 
-use Illuminate\Support\Facades\File;
 use Skokosioulis\LaravelMedia\Tests\TestCase;
 
 class InstallCommandTest extends TestCase

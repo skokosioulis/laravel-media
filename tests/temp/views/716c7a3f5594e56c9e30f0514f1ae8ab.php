@@ -12,5 +12,7 @@ unset($__html);
 unset($__name);
 unset($__params);
 unset($__split);
-if (isset($__slots)) unset($__slots);
+if (isset($__slots)) {
+    unset($__slots);
+}
 ?><?php /**PATH C:\Users\User\Herd\laravel-media\tests/temp/views/a168b0ebcff266df6b662fc4b6d06e88.blade.php ENDPATH**/ ?>

@@ -2,8 +2,8 @@
 
 namespace Workbench\App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\ServiceProvider;
 
 class CacheServiceProvider extends ServiceProvider
 {
@@ -38,10 +38,10 @@ class CacheServiceProvider extends ServiceProvider
             storage_path('logs'),
             storage_path('app'),
             storage_path('app/public'),
-            
+
             // Bootstrap cache
             base_path('bootstrap/cache'),
-            
+
             // Testbench core directories
             base_path('vendor/orchestra/testbench-core/laravel/storage/framework/cache'),
             base_path('vendor/orchestra/testbench-core/laravel/storage/framework/cache/data'),
@@ -53,7 +53,7 @@ class CacheServiceProvider extends ServiceProvider
         ];
 
         foreach ($directories as $directory) {
-            if (!File::exists($directory)) {
+            if (! File::exists($directory)) {
                 try {
                     File::makeDirectory($directory, 0755, true);
                 } catch (\Exception $e) {

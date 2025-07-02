@@ -1,21 +1,25 @@
 <div class="media-gallery">
-    <!--[if BLOCK]><![endif]--><?php if(count($media) > 0): ?>
-        <!--[if BLOCK]><![endif]--><?php if($sortable): ?>
+    <!--[if BLOCK]><![endif]--><?php if (count($media) > 0) { ?>
+        <!--[if BLOCK]><![endif]--><?php if ($sortable) { ?>
             <!-- Sortable Mode -->
             <div
                 x-data="sortableGallery()"
                 x-init="initSortable()"
-                class="grid gap-4 <?php switch($columns):
-                    case (2): ?> grid-cols-2 <?php break; ?>
-                    <?php case (3): ?> grid-cols-3 <?php break; ?>
-                    <?php case (4): ?> grid-cols-2 md:grid-cols-4 <?php break; ?>
-                    <?php case (5): ?> grid-cols-2 md:grid-cols-5 <?php break; ?>
-                    <?php case (6): ?> grid-cols-2 md:grid-cols-6 <?php break; ?>
+                class="grid gap-4 <?php switch ($columns) {
+                    case 2: ?> grid-cols-2 <?php break; ?>
+                    <?php case 3: ?> grid-cols-3 <?php break; ?>
+                    <?php case 4: ?> grid-cols-2 md:grid-cols-4 <?php break; ?>
+                    <?php case 5: ?> grid-cols-2 md:grid-cols-5 <?php break; ?>
+                    <?php case 6: ?> grid-cols-2 md:grid-cols-6 <?php break; ?>
                     <?php default: ?> grid-cols-2 md:grid-cols-4
-                <?php endswitch; ?>"
+                <?php } ?>"
                 id="sortable-gallery-<?php echo e($collection); ?>"
             >
-                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $media; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $media;
+            $__env->addLoop($__currentLoopData);
+            foreach ($__currentLoopData as $item) {
+                $__env->incrementLoopIndices();
+                $loop = $__env->getLastLoop(); ?>
                     <div
                         data-id="<?php echo e($item['id']); ?>"
                         class="relative group bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200 sortable-item"
@@ -29,26 +33,32 @@
 
                         <?php echo $__env->make('laravel-media::partials.media-item', ['item' => $item, 'showInfo' => $showInfo], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
                     </div>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+                <?php } $__env->popLoop();
+            $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
             </div>
-        <?php else: ?>
+        <?php } else { ?>
             <!-- Regular Mode -->
-            <div class="grid gap-4 <?php switch($columns):
-                case (2): ?> grid-cols-2 <?php break; ?>
-                <?php case (3): ?> grid-cols-3 <?php break; ?>
-                <?php case (4): ?> grid-cols-2 md:grid-cols-4 <?php break; ?>
-                <?php case (5): ?> grid-cols-2 md:grid-cols-5 <?php break; ?>
-                <?php case (6): ?> grid-cols-2 md:grid-cols-6 <?php break; ?>
+            <div class="grid gap-4 <?php switch ($columns) {
+                case 2: ?> grid-cols-2 <?php break; ?>
+                <?php case 3: ?> grid-cols-3 <?php break; ?>
+                <?php case 4: ?> grid-cols-2 md:grid-cols-4 <?php break; ?>
+                <?php case 5: ?> grid-cols-2 md:grid-cols-5 <?php break; ?>
+                <?php case 6: ?> grid-cols-2 md:grid-cols-6 <?php break; ?>
                 <?php default: ?> grid-cols-2 md:grid-cols-4
-            <?php endswitch; ?>">
-                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $media; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <?php } ?>">
+                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $media;
+            $__env->addLoop($__currentLoopData);
+            foreach ($__currentLoopData as $item) {
+                $__env->incrementLoopIndices();
+                $loop = $__env->getLastLoop(); ?>
                     <div class="relative group bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
                         <?php echo $__env->make('laravel-media::partials.media-item', ['item' => $item, 'showInfo' => $showInfo], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
                     </div>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+                <?php } $__env->popLoop();
+            $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
             </div>
-        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-    <?php else: ?>
+        <?php } ?><!--[if ENDBLOCK]><![endif]-->
+    <?php } else { ?>
         <div class="text-center py-12">
             <svg class="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
@@ -56,7 +66,7 @@
             <h3 class="text-lg font-medium text-gray-900 mb-2">No media files</h3>
             <p class="text-gray-500">Upload some files to see them here.</p>
         </div>
-    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+    <?php } ?><!--[if ENDBLOCK]><![endif]-->
 
     <!-- Media Modal -->
     <div id="mediaModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-75 flex items-center justify-center p-4">
@@ -70,7 +80,7 @@
         </div>
     </div>
 
-    <!--[if BLOCK]><![endif]--><?php if($sortable): ?>
+    <!--[if BLOCK]><![endif]--><?php if ($sortable) { ?>
         <!-- Include SortableJS -->
         <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
@@ -103,7 +113,7 @@
                 }
             }
         </script>
-    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+    <?php } ?><!--[if ENDBLOCK]><![endif]-->
 
     <script>
     function openMediaModal(url, name, type) {

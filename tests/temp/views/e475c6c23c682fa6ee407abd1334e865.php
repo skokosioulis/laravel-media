@@ -69,14 +69,18 @@
         </div>
     </div>
     <div class="shrink-0 sm:flex sm:flex-col sm:items-end">
-        <!--[if BLOCK]><![endif]--><?php if($sortablePreview): ?>
+        <!--[if BLOCK]><![endif]--><?php if ($sortablePreview) { ?>
             <div
                 x-data="sortableUpload()"
                 x-init="initSortable()"
                 class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"
                 id="sortable-upload-<?php echo e($collection); ?>"
             >
-                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $existingMedia; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $media): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $existingMedia;
+            $__env->addLoop($__currentLoopData);
+            foreach ($__currentLoopData as $media) {
+                $__env->incrementLoopIndices();
+                $loop = $__env->getLastLoop(); ?>
                     <div
                         data-id="<?php echo e($media['id']); ?>"
                         class="relative group sortable-item"
@@ -91,9 +95,10 @@
                         </div>
                         <?php echo $__env->make('laravel-media::partials.upload-media-item', ['media' => $media], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
                     </div>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+                <?php } $__env->popLoop();
+            $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
             </div>
-        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+        <?php } ?><!--[if ENDBLOCK]><![endif]-->
         <button
             wire:click="removeFile(<?php echo e($media['id']); ?>)"
             class="bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center duration-200 hover:bg-red-600"
