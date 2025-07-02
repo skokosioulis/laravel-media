@@ -36,15 +36,15 @@
                         type="file"
                         class="sr-only"
                         wire:model="files"
-                        <?php if($multiple): ?> multiple <?php endif; ?>
-                        <?php if($acceptedTypes): ?> accept="<?php echo e($acceptedTypes); ?>" <?php endif; ?>
+                        <?php if ($multiple) { ?> multiple <?php } ?>
+                        <?php if ($acceptedTypes) { ?> accept="<?php echo e($acceptedTypes); ?>" <?php } ?>
                     >
                 </label>
                 <p class="text-xs text-gray-500 mt-1">
-                    <!--[if BLOCK]><![endif]--><?php if($acceptedTypes): ?>
+                    <!--[if BLOCK]><![endif]--><?php if ($acceptedTypes) { ?>
                         Accepted types: <?php echo e(str_replace(',', ', ', $acceptedTypes)); ?>
 
-                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                    <?php } ?><!--[if ENDBLOCK]><![endif]-->
                     Max size: <?php echo e(number_format($maxFileSize / 1024, 1)); ?>MB
                 </p>
             </div>
@@ -62,7 +62,7 @@
     </div>
 
     <!-- Error Messages -->
-    <!--[if BLOCK]><![endif]--><?php if($errors->any()): ?>
+    <!--[if BLOCK]><![endif]--><?php if ($errors->any()) { ?>
         <div class="mt-4 bg-red-50 border border-red-200 rounded-md p-4">
             <div class="flex">
                 <div class="flex-shrink-0">
@@ -76,41 +76,56 @@
                     <h3 class="text-sm font-medium text-red-800">Upload Error</h3>
                     <div class="mt-2 text-sm text-red-700">
                         <ul class="list-disc pl-5 space-y-1">
-                            <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $errors->all();
+        $__env->addLoop($__currentLoopData);
+        foreach ($__currentLoopData as $error) {
+            $__env->incrementLoopIndices();
+            $loop = $__env->getLastLoop(); ?>
                                 <li><?php echo e($error); ?></li>
-                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+                            <?php } $__env->popLoop();
+        $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
-    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+    <?php } ?><!--[if ENDBLOCK]><![endif]-->
 
     <!-- Existing Media Preview -->
-    <!--[if BLOCK]><![endif]--><?php if($showPreview && count($existingMedia) > 0): ?>
-        <!--[if BLOCK]><![endif]--><?php if($sortablePreview): ?>
+    <!--[if BLOCK]><![endif]--><?php if ($showPreview && count($existingMedia) > 0) { ?>
+        <!--[if BLOCK]><![endif]--><?php if ($sortablePreview) { ?>
             <ul role="list" class="divide-y divide-gray-100 w-full"
                 x-data="sortableUpload()"
                 x-init="initSortable()"
                 id="sortable-upload-<?php echo e($collection); ?>">
-                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $existingMedia; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $media): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $existingMedia;
+            $__env->addLoop($__currentLoopData);
+            foreach ($__currentLoopData as $media) {
+                $__env->incrementLoopIndices();
+                $loop = $__env->getLastLoop(); ?>
                     <li data-id="<?php echo e($media['id']); ?>" class="sortable-item">
                         <?php echo $__env->make('laravel-media::partials.upload-media-item', ['media' => $media, 'sortablePreview' => $sortablePreview], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
                     </li>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+                <?php } $__env->popLoop();
+            $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
             </ul>
-        <?php else: ?>
+        <?php } else { ?>
             <ul role="list" class="divide-y divide-gray-100 w-full">
-                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $existingMedia; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $media): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $existingMedia;
+            $__env->addLoop($__currentLoopData);
+            foreach ($__currentLoopData as $media) {
+                $__env->incrementLoopIndices();
+                $loop = $__env->getLastLoop(); ?>
                     <li>
                         <?php echo $__env->make('laravel-media::partials.upload-media-item', ['media' => $media, 'sortablePreview' => false], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
                     </li>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+                <?php } $__env->popLoop();
+            $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
             </ul>
-        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+        <?php } ?><!--[if ENDBLOCK]><![endif]-->
+    <?php } ?><!--[if ENDBLOCK]><![endif]-->
 
-    <!--[if BLOCK]><![endif]--><?php if($sortablePreview): ?>
+    <!--[if BLOCK]><![endif]--><?php if ($sortablePreview) { ?>
         <!-- Include SortableJS -->
         <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
@@ -143,6 +158,6 @@
                 }
             }
         </script>
-    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+    <?php } ?><!--[if ENDBLOCK]><![endif]-->
 </div>
 <?php /**PATH C:\Users\User\Herd\laravel-media\src/../resources/views/livewire/media-upload.blade.php ENDPATH**/ ?>
