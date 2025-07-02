@@ -57,8 +57,8 @@ class MediaUpload extends Component
                 'file',
                 "max:{$maxSize}",
                 function ($attribute, $value, $fail) use ($allowedMimeTypes) {
-                    if (!empty($allowedMimeTypes) && !in_array($value->getMimeType(), $allowedMimeTypes)) {
-                        $allowedTypes = implode(', ', array_map(function($type) {
+                    if (! empty($allowedMimeTypes) && ! in_array($value->getMimeType(), $allowedMimeTypes)) {
+                        $allowedTypes = implode(', ', array_map(function ($type) {
                             return $this->mimeTypeToReadableName($type);
                         }, $allowedMimeTypes));
                         $fail("The file type '{$value->getMimeType()}' is not allowed. Allowed types: {$allowedTypes}");
@@ -72,7 +72,7 @@ class MediaUpload extends Component
     {
         // First check if collection has specific MIME types
         $collectionConfig = config("media.collections.{$this->collection}");
-        if ($collectionConfig && isset($collectionConfig['accepts_mime_types']) && !empty($collectionConfig['accepts_mime_types'])) {
+        if ($collectionConfig && isset($collectionConfig['accepts_mime_types']) && ! empty($collectionConfig['accepts_mime_types'])) {
             return $collectionConfig['accepts_mime_types'];
         }
 
@@ -272,8 +272,8 @@ class MediaUpload extends Component
         $extensions = $this->mimeTypesToExtensions($allowedMimeTypes);
 
         // Return both MIME types and extensions for better browser support
-        $acceptTypes = array_merge($allowedMimeTypes, array_map(function($ext) {
-            return '.' . $ext;
+        $acceptTypes = array_merge($allowedMimeTypes, array_map(function ($ext) {
+            return '.'.$ext;
         }, $extensions));
 
         return implode(',', $acceptTypes);

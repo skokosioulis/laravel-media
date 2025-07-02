@@ -155,12 +155,13 @@ class Media extends Model
     {
         // Check collection-specific MIME types first
         $collectionConfig = config("media.collections.{$collection}");
-        if ($collectionConfig && isset($collectionConfig['accepts_mime_types']) && !empty($collectionConfig['accepts_mime_types'])) {
+        if ($collectionConfig && isset($collectionConfig['accepts_mime_types']) && ! empty($collectionConfig['accepts_mime_types'])) {
             return in_array($mimeType, $collectionConfig['accepts_mime_types']);
         }
 
         // Fall back to global allowed MIME types
         $globalMimeTypes = config('media.upload_limits.allowed_mime_types', []);
+
         return empty($globalMimeTypes) || in_array($mimeType, $globalMimeTypes);
     }
 
@@ -171,7 +172,7 @@ class Media extends Model
     {
         // Check collection-specific MIME types first
         $collectionConfig = config("media.collections.{$collection}");
-        if ($collectionConfig && isset($collectionConfig['accepts_mime_types']) && !empty($collectionConfig['accepts_mime_types'])) {
+        if ($collectionConfig && isset($collectionConfig['accepts_mime_types']) && ! empty($collectionConfig['accepts_mime_types'])) {
             return $collectionConfig['accepts_mime_types'];
         }
 
