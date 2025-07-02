@@ -84,7 +84,7 @@
                         'collection' => 'avatars',
                         'multiple' => true,
                         'showPreview' => true,
-                        'sortablePreview' => false
+                        'sortablePreview' => true
                     ])
                 </div>
             </div>

@@ -87,12 +87,26 @@
 
     <!-- Existing Media Preview -->
     @if($showPreview && count($existingMedia) > 0)
-
-        <ul role="list" class="divide-y divide-gray-100 w-full">
-            @foreach($existingMedia as $media)
-                @include('laravel-media::partials.upload-media-item', ['media' => $media])
-            @endforeach
-        </ul>
+        @if($sortablePreview)
+            <ul role="list" class="divide-y divide-gray-100 w-full"
+                x-data="sortableUpload()"
+                x-init="initSortable()"
+                id="sortable-upload-{{ $collection }}">
+                @foreach($existingMedia as $media)
+                    <li data-id="{{ $media['id'] }}" class="sortable-item">
+                        @include('laravel-media::partials.upload-media-item', ['media' => $media, 'sortablePreview' => $sortablePreview])
+                    </li>
+                @endforeach
+            </ul>
+        @else
+            <ul role="list" class="divide-y divide-gray-100 w-full">
+                @foreach($existingMedia as $media)
+                    <li>
+                        @include('laravel-media::partials.upload-media-item', ['media' => $media, 'sortablePreview' => false])
+                    </li>
+                @endforeach
+            </ul>
+        @endif
     @endif
 
     @if($sortablePreview)
@@ -111,11 +125,11 @@
                                 animation: 150,
                                 ghostClass: 'opacity-50',
                                 chosenClass: 'scale-105',
+                                dragClass: 'rotate-1',
                                 onEnd: (evt) => {
                                     const items = Array.from(container.children);
                                     const orderedIds = items.map(item => item.dataset.id);
-                                    @this.
-                                    call('updateMediaOrder', orderedIds);
+                                    @this.call('updateMediaOrder', orderedIds);
                                 }
                             });
                         }

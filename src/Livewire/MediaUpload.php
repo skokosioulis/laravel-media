@@ -260,7 +260,7 @@ class MediaUpload extends Component
             }
 
             if ($modelInstance) {
-                $this->existingMedia = $modelInstance->getMedia($this->collection)->toArray();
+                $this->existingMedia = $modelInstance->getMedia($this->collection)->sortBy('order_column')->values()->toArray();
             }
         }
     }
