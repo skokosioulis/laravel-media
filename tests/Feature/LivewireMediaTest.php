@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 use Skokosioulis\LaravelMedia\Livewire\MediaGallery;
 use Skokosioulis\LaravelMedia\Livewire\MediaUpload;
+use Skokosioulis\LaravelMedia\Livewire\SingleMediaUpload;
 use Skokosioulis\LaravelMedia\Livewire\SortableMediaGallery;
 use Skokosioulis\LaravelMedia\Traits\HasMedia;
 
@@ -370,4 +371,158 @@ it('prevents updating description of unauthorized media', function () {
     // Verify the description was not updated
     $media->refresh();
     expect($media->description)->toBeNull();
+});
+
+// SingleMediaUpload Component Tests
+it('can render single media upload component', function () {
+    $model = TestModelForLivewire::create(['name' => 'Test Model']);
+
+    Livewire::test(SingleMediaUpload::class, [
+        'model' => TestModelForLivewire::class,
+        'modelId' => $model->id,
+        'collection' => 'avatar',
+    ])
+        ->assertStatus(200)
+        ->assertSee('Click to upload or drag and drop');
+});
+
+it('can upload single file through single media upload component', function () {
+    $model = TestModelForLivewire::create(['name' => 'Test Model']);
+
+    $file = UploadedFile::fake()->image('avatar.jpg', 100, 100);
+
+    Livewire::test(SingleMediaUpload::class, [
+        'model' => TestModelForLivewire::class,
+        'modelId' => $model->id,
+        'collection' => 'avatar',
+    ])
+        ->set('file', $file)
+        ->assertHasNoErrors()
+        ->assertDispatched('single-media-uploaded');
+
+    expect($model->fresh()->getMedia('avatar'))->toHaveCount(1);
+});
+
+it('replaces existing media when uploading new file with replace enabled', function () {
+    $model = TestModelForLivewire::create(['name' => 'Test Model']);
+
+    // Upload first file
+    $firstFile = UploadedFile::fake()->image('first.jpg', 100, 100);
+    $firstMedia = $model->addMedia($firstFile, 'avatar');
+
+    // Upload second file through component (should replace)
+    $secondFile = UploadedFile::fake()->image('second.jpg', 100, 100);
+
+    Livewire::test(SingleMediaUpload::class, [
+        'model' => TestModelForLivewire::class,
+        'modelId' => $model->id,
+        'collection' => 'avatar',
+        'replaceExisting' => true,
+    ])
+        ->set('file', $secondFile)
+        ->assertHasNoErrors()
+        ->assertDispatched('single-media-uploaded');
+
+    // Should still have only 1 media item (replaced)
+    expect($model->fresh()->getMedia('avatar'))->toHaveCount(1);
+
+    // First media should be deleted
+    expect($model->fresh()->getMedia('avatar')->first()->name)->toBe('second.jpg');
+});
+
+it('does not replace existing media when replace is disabled', function () {
+    $model = TestModelForLivewire::create(['name' => 'Test Model']);
+
+    // Upload first file
+    $firstFile = UploadedFile::fake()->image('first.jpg', 100, 100);
+    $model->addMedia($firstFile, 'avatar');
+
+    // Upload second file through component (should not replace)
+    $secondFile = UploadedFile::fake()->image('second.jpg', 100, 100);
+
+    Livewire::test(SingleMediaUpload::class, [
+        'model' => TestModelForLivewire::class,
+        'modelId' => $model->id,
+        'collection' => 'avatar',
+        'replaceExisting' => false,
+    ])
+        ->set('file', $secondFile)
+        ->assertHasNoErrors()
+        ->assertDispatched('single-media-uploaded');
+
+    // Should have 2 media items (not replaced)
+    expect($model->fresh()->getMedia('avatar'))->toHaveCount(2);
+});
+
+it('can remove single media file', function () {
+    $model = TestModelForLivewire::create(['name' => 'Test Model']);
+
+    $file = UploadedFile::fake()->image('avatar.jpg', 100, 100);
+    $media = $model->addMedia($file, 'avatar');
+
+    Livewire::test(SingleMediaUpload::class, [
+        'model' => TestModelForLivewire::class,
+        'modelId' => $model->id,
+        'collection' => 'avatar',
+    ])
+        ->call('removeFile')
+        ->assertDispatched('single-media-removed');
+
+    expect($model->fresh()->getMedia('avatar'))->toHaveCount(0);
+});
+
+it('loads existing single media on component mount', function () {
+    $model = TestModelForLivewire::create(['name' => 'Test Model']);
+
+    $file = UploadedFile::fake()->image('avatar.jpg', 100, 100);
+    $media = $model->addMedia($file, 'avatar');
+
+    $component = Livewire::test(SingleMediaUpload::class, [
+        'model' => TestModelForLivewire::class,
+        'modelId' => $model->id,
+        'collection' => 'avatar',
+    ]);
+
+    expect($component->get('existingMedia'))->not->toBeNull();
+    expect($component->get('existingMedia')->id)->toBe($media->id);
+});
+
+it('can update single media description', function () {
+    $model = TestModelForLivewire::create(['name' => 'Test Model']);
+
+    // Create a media file
+    $file = UploadedFile::fake()->image('avatar.jpg');
+    $media = $model->addMedia($file, 'avatar');
+
+    // Test updating description through SingleMediaUpload component
+    Livewire::test(SingleMediaUpload::class, [
+        'model' => TestModelForLivewire::class,
+        'modelId' => $model->id,
+        'collection' => 'avatar',
+    ])
+        ->call('updateMediaDescription', 'Updated avatar description')
+        ->assertHasNoErrors()
+        ->assertDispatched('single-media-description-updated', [
+            'mediaId' => $media->id,
+            'description' => 'Updated avatar description',
+        ]);
+
+    // Verify the description was updated in the database
+    $media->refresh();
+    expect($media->description)->toBe('Updated avatar description');
+});
+
+it('validates single file uploads', function () {
+    $model = TestModelForLivewire::create(['name' => 'Test Model']);
+
+    // Create a file that's too large (assuming max is 10MB)
+    $largeFile = UploadedFile::fake()->create('large.txt', 20000); // 20MB
+
+    Livewire::test(SingleMediaUpload::class, [
+        'model' => TestModelForLivewire::class,
+        'modelId' => $model->id,
+        'collection' => 'avatar',
+    ])
+        ->set('file', $largeFile)
+        ->assertHasErrors(['file']);
 });

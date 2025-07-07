@@ -7,6 +7,7 @@ use Skokosioulis\LaravelMedia\Commands\LaravelMediaCommand;
 use Skokosioulis\LaravelMedia\Commands\LaravelMediaInstallCommand;
 use Skokosioulis\LaravelMedia\Livewire\MediaGallery;
 use Skokosioulis\LaravelMedia\Livewire\MediaUpload;
+use Skokosioulis\LaravelMedia\Livewire\SingleMediaUpload;
 use Skokosioulis\LaravelMedia\Livewire\SortableMediaGallery;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -45,6 +46,7 @@ class LaravelMediaServiceProvider extends PackageServiceProvider
         // Register Livewire components
         if (class_exists(Livewire::class)) {
             Livewire::component('media-upload', MediaUpload::class);
+            Livewire::component('single-media-upload', SingleMediaUpload::class);
             Livewire::component('media-gallery', MediaGallery::class);
             Livewire::component('sortable-media-gallery', SortableMediaGallery::class);
         }

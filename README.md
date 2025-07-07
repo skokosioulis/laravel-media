@@ -160,6 +160,23 @@ return [
 ])
 ```
 
+### SingleMediaUpload Component
+
+Perfect for uploading a single file with automatic replacement functionality:
+
+```blade
+@livewire('single-media-upload', [
+    'model' => 'App\\Models\\User',          // Model class
+    'modelId' => $user->id,                  // Model ID
+    'collection' => 'avatar',                // Collection name
+    'acceptedTypes' => 'image/*',            // Accepted file types
+    'maxFileSize' => 2048,                   // Max size in KB
+    'showPreview' => true,                   // Show existing file preview
+    'replaceExisting' => true,               // Replace existing file when uploading new one
+    'placeholder' => 'Upload your avatar'    // Custom placeholder text
+])
+```
+
 ### MediaGallery Component
 
 ```blade
