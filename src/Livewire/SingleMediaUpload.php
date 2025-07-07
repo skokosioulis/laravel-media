@@ -125,6 +125,7 @@ class SingleMediaUpload extends Component
     {
         if (! $this->model || ! $this->modelId) {
             $this->addError('upload', 'Model and Model ID are required for upload.');
+
             return;
         }
 
@@ -135,6 +136,7 @@ class SingleMediaUpload extends Component
             // Ensure the class exists
             if (! class_exists($modelClass)) {
                 $this->addError('upload', "Model class '{$modelClass}' not found.");
+
                 return;
             }
             $modelInstance = $modelClass::find($this->modelId);
@@ -144,6 +146,7 @@ class SingleMediaUpload extends Component
 
         if (! $modelInstance) {
             $this->addError('upload', 'Model instance not found.');
+
             return;
         }
 
@@ -154,10 +157,10 @@ class SingleMediaUpload extends Component
             }
 
             $media = $modelInstance->addMedia($this->file, $this->collection);
-            
+
             $this->file = null;
             $this->loadExistingMedia();
-            
+
             $this->dispatch('single-media-uploaded', [
                 'collection' => $this->collection,
                 'mediaId' => $media->id,
@@ -182,12 +185,14 @@ class SingleMediaUpload extends Component
     {
         if (! $this->existingMedia) {
             $this->addError('media', 'No media found to update.');
+
             return;
         }
 
         // Check if the media belongs to the current model
         if ($this->existingMedia->mediable_type !== $this->model || $this->existingMedia->mediable_id != $this->modelId) {
             $this->addError('media', 'Unauthorized to update this media.');
+
             return;
         }
 
@@ -212,6 +217,7 @@ class SingleMediaUpload extends Component
                 // Ensure the class exists
                 if (! class_exists($modelClass)) {
                     $this->addError('model', "Model class '{$modelClass}' not found.");
+
                     return;
                 }
                 $modelInstance = $modelClass::find($this->modelId);
