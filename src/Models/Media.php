@@ -54,9 +54,9 @@ class Media extends Model
         if ($this->disk == 'external') {
             return Storage::disk($this->disk)->url($this->file_name);
         }
+
         return Storage::disk($this->disk)->url($this->path);
     }
-
 
     public function getHumanReadableSizeAttribute(): string
     {
@@ -67,7 +67,7 @@ class Media extends Model
             $bytes /= 1024;
         }
 
-        return round($bytes, 2) . ' ' . $units[$i];
+        return round($bytes, 2).' '.$units[$i];
     }
 
     public function getExtensionAttribute(): string
@@ -159,7 +159,7 @@ class Media extends Model
     {
         // Check collection-specific MIME types first
         $collectionConfig = config("media.collections.{$collection}");
-        if ($collectionConfig && isset($collectionConfig['accepts_mime_types']) && !empty($collectionConfig['accepts_mime_types'])) {
+        if ($collectionConfig && isset($collectionConfig['accepts_mime_types']) && ! empty($collectionConfig['accepts_mime_types'])) {
             return in_array($mimeType, $collectionConfig['accepts_mime_types']);
         }
 
@@ -176,7 +176,7 @@ class Media extends Model
     {
         // Check collection-specific MIME types first
         $collectionConfig = config("media.collections.{$collection}");
-        if ($collectionConfig && isset($collectionConfig['accepts_mime_types']) && !empty($collectionConfig['accepts_mime_types'])) {
+        if ($collectionConfig && isset($collectionConfig['accepts_mime_types']) && ! empty($collectionConfig['accepts_mime_types'])) {
             return $collectionConfig['accepts_mime_types'];
         }
 
