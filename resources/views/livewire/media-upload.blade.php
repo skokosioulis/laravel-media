@@ -2,52 +2,52 @@
     <!-- Upload Area -->
     @if($useDropzone)
         <!-- Dropzone Interface -->
-        <label for="file-upload-{{ $collection }}" class="block cursor-pointer">
-            <div
-                class="upload-area border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors duration-200"
-                x-data="{
-                     isDragging: false,
-                     handleDrop(e) {
-                         this.isDragging = false;
-                         const files = Array.from(e.dataTransfer.files);
-                         if (files.length > 0) {
-                             // Use Livewire's uploadMultiple method for drag and drop
-                             @this.uploadMultiple('files', files);
-                         }
+        <div
+            class="upload-area border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors duration-200"
+            x-data="{
+                 isDragging: false,
+                 handleDrop(e) {
+                     this.isDragging = false;
+                     const files = Array.from(e.dataTransfer.files);
+                     if (files.length > 0) {
+                         // Use Livewire's uploadMultiple method for drag and drop
+                         @this.uploadMultiple('files', files);
                      }
-                 }"
-                x-on:dragover.prevent="isDragging = true"
-                x-on:dragleave.prevent="isDragging = false"
-                x-on:drop.prevent="handleDrop($event)"
-                :class="{ 'border-blue-400 bg-blue-50': isDragging }">
+                 }
+             }"
+            x-on:dragover.prevent="isDragging = true"
+            x-on:dragleave.prevent="isDragging = false"
+            x-on:drop.prevent="handleDrop($event)"
+            :class="{ 'border-blue-400 bg-blue-50': isDragging }">
 
-                <div class="space-y-4">
-                    <div class="flex justify-center">
-                        <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                        </svg>
-                    </div>
+            <div class="space-y-4">
+                <div class="flex justify-center">
+                    <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                    </svg>
+                </div>
 
-                    <div>
+                <div>
+                    <label for="file-upload-{{ $collection }}" class="cursor-pointer">
                         <span class="text-sm font-medium text-gray-700">
                             Click to upload {{ $multiple ? 'files' : 'a file' }} or drag and drop
                         </span>
-                        <p class="text-xs text-gray-500 mt-1">
-                            Max size: {{ number_format($maxFileSize / 1024, 1) }}MB
-                        </p>
-                    </div>
+                        <input
+                            id="file-upload-{{ $collection }}"
+                            type="file"
+                            class="sr-only"
+                            wire:model="files"
+                            @if($multiple) multiple @endif
+                            @if($acceptedTypes) accept="{{ $acceptedTypes }}" @endif
+                        >
+                    </label>
+                    <p class="text-xs text-gray-500 mt-1">
+                        Max size: {{ number_format($maxFileSize / 1024, 1) }}MB
+                    </p>
                 </div>
             </div>
-            <input
-                id="file-upload-{{ $collection }}"
-                type="file"
-                class="sr-only"
-                wire:model="files"
-                @if($multiple) multiple @endif
-                @if($acceptedTypes) accept="{{ $acceptedTypes }}" @endif
-            >
-        </label>
+        </div>
     @else
         <!-- Simple Button Interface -->
         <div class="upload-button-area">
