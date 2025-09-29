@@ -201,9 +201,6 @@
                 </label>
 
                 <div class="text-sm text-gray-600">
-                    @if($acceptedTypes)
-                        <span class="block">Accepted: {{ str_replace(',', ', ', $acceptedTypes) }}</span>
-                    @endif
                     <span class="block">Max size: {{ number_format($maxFileSize / 1024, 1) }}MB</span>
                     @if($existingMedia && $replaceExisting)
                         <span class="block text-orange-600 font-medium">Will replace existing file</span>

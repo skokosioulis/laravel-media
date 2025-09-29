@@ -34,9 +34,6 @@
                             Click to upload {{ $multiple ? 'files' : 'a file' }} or drag and drop
                         </span>
                         <p class="text-xs text-gray-500 mt-1">
-                            @if($acceptedTypes)
-                                Accepted types: {{ str_replace(',', ', ', $acceptedTypes) }}
-                            @endif
                             Max size: {{ number_format($maxFileSize / 1024, 1) }}MB
                         </p>
                     </div>
