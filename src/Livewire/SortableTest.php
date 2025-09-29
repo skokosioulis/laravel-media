@@ -24,12 +24,12 @@ class SortableTest extends Component
                 $orderedItems[] = $item;
             }
         }
-        
+
         $this->items = $orderedItems;
-        
+
         // Dispatch event for debugging
         $this->dispatch('test-reordered', ['orderedIds' => $orderedIds]);
-        
+
         // Show success message
         session()->flash('message', 'Items reordered successfully!');
     }
