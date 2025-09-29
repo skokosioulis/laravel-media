@@ -241,7 +241,7 @@ class MediaUpload extends Component
             'collection' => $this->collection,
             'orderedIds' => $orderedIds,
             'model' => $this->model,
-            'modelId' => $this->modelId
+            'modelId' => $this->modelId,
         ]);
 
         // Update the order for media items in this specific collection
@@ -253,7 +253,7 @@ class MediaUpload extends Component
             \Log::info('Updated media order', [
                 'mediaId' => $mediaId,
                 'newOrder' => $index + 1,
-                'updated' => $updated
+                'updated' => $updated,
             ]);
         }
 
@@ -262,15 +262,13 @@ class MediaUpload extends Component
 
         // Log the final order for debugging
         \Log::info('Final media order', [
-            'existingMedia' => collect($this->existingMedia)->pluck('id', 'order_column')->toArray()
+            'existingMedia' => collect($this->existingMedia)->pluck('id', 'order_column')->toArray(),
         ]);
-
-
 
         // Dispatch event for any listeners
         $this->dispatch('media-reordered', [
             'collection' => $this->collection,
-            'orderedIds' => $orderedIds
+            'orderedIds' => $orderedIds,
         ]);
     }
 
@@ -314,7 +312,7 @@ class MediaUpload extends Component
                 \Log::info('Loaded existing media', [
                     'collection' => $this->collection,
                     'count' => $freshMedia->count(),
-                    'order' => $freshMedia->pluck('id', 'order_column')->toArray()
+                    'order' => $freshMedia->pluck('id', 'order_column')->toArray(),
                 ]);
             }
         }
