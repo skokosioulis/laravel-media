@@ -1,5 +1,9 @@
 {
-  "devDependencies": {
-    "livewire-sortable": "^1.0.0"
-  }
+    "devDependencies": {
+        "vite": "^7.1.7",
+        "livewire-sortable": "^1.0.0"
+    },
+    "scripts": {
+        "build": "vite build"
+    }
 }
