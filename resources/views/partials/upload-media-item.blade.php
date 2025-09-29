@@ -4,16 +4,7 @@
         description: '{{ $media['description'] ?? '' }}',
         originalDescription: '{{ $media['description'] ?? '' }}'
     }">
-    <!-- Drag Handle (only show if sortable) -->
-    @if($sortablePreview ?? false)
-        <div
-            class="flex-shrink-0 cursor-move sortable-handle opacity-70 hover:opacity-100 transition-opacity duration-200 mr-2">
-            <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                    d="M7 2a2 2 0 1 1 .001 4.001A2 2 0 0 1 7 2zM7 8a2 2 0 1 1 .001 4.001A2 2 0 0 1 7 8zM7 14a2 2 0 1 1 .001 4.001A2 2 0 0 1 7 14zM13 2a2 2 0 1 1 .001 4.001A2 2 0 0 1 13 2zM13 8a2 2 0 1 1 .001 4.001A2 2 0 0 1 13 8zM13 14a2 2 0 1 1 .001 4.001A2 2 0 0 1 13 14z"></path>
-            </svg>
-        </div>
-    @endif
+
 
     <div class="flex min-w-0 w-full gap-x-4 items-center">
         <div class="aspect-square bg-gray-100 rounded-lg">

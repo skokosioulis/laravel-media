@@ -310,6 +310,7 @@ it('can update media order in upload component with sortable preview', function 
     $media1 = $model->addMedia($file1);
     $media2 = $model->addMedia($file2);
 
+    // Test reordering with Livewire Sortable format
     $newOrder = [$media2->id, $media1->id];
 
     Livewire::test(MediaUpload::class, [
@@ -318,7 +319,7 @@ it('can update media order in upload component with sortable preview', function 
         'collection' => 'default',
         'sortablePreview' => true,
     ])
-        ->call('updateMediaOrder', $newOrder)
+        ->call('updateTaskOrder', $newOrder)
         ->assertDispatched('media-reordered');
 
     // Check new order

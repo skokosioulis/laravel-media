@@ -113,20 +113,26 @@
     <!-- Existing Media Preview -->
     @if($showPreview && count($existingMedia) > 0)
         @if($sortablePreview)
-            <ul role="list" class="divide-y divide-gray-100 w-full"
-                x-data="sortableUpload()"
-                x-init="initSortable()"
-                id="sortable-upload-{{ $collection }}">
+            <ul role="list" class="divide-y divide-gray-100 w-full" wire:sortable="updateTaskOrder">
                 @foreach($existingMedia as $media)
-                    <li data-id="{{ $media['id'] }}" class="sortable-item">
-                        @include('laravel-media::partials.upload-media-item', ['media' => $media, 'sortablePreview' => $sortablePreview])
+                    <li wire:sortable.item="{{ $media['id'] }}" wire:key="media-{{ $media['id'] }}" class="sortable-item">
+                        <div class="flex items-center">
+                            <div wire:sortable.handle class="sortable-handle cursor-move flex-shrink-0 mr-3 text-gray-400 hover:text-gray-600 transition-colors duration-200">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M7 2a2 2 0 1 1 .001 4.001A2 2 0 0 1 7 2zM7 8a2 2 0 1 1 .001 4.001A2 2 0 0 1 7 8zM7 14a2 2 0 1 1 .001 4.001A2 2 0 0 1 7 14zM13 2a2 2 0 1 1 .001 4.001A2 2 0 0 1 13 2zM13 8a2 2 0 1 1 .001 4.001A2 2 0 0 1 13 8zM13 14a2 2 0 1 1 .001 4.001A2 2 0 0 1 13 14z"></path>
+                                </svg>
+                            </div>
+                            <div class="flex-1">
+                                @include('laravel-media::partials.upload-media-item', ['media' => $media, 'sortablePreview' => $sortablePreview])
+                            </div>
+                        </div>
                     </li>
                 @endforeach
             </ul>
         @else
             <ul role="list" class="divide-y divide-gray-100 w-full">
                 @foreach($existingMedia as $media)
-                    <li>
+                    <li wire:key="media-{{ $media['id'] }}">
                         @include('laravel-media::partials.upload-media-item', ['media' => $media, 'sortablePreview' => false])
                     </li>
                 @endforeach
@@ -135,37 +141,9 @@
     @endif
 
     @if($sortablePreview)
-        <!-- Include SortableJS -->
-        <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-
-        <script>
-            function sortableUpload() {
-                return {
-                    sortable: null,
-                    initSortable() {
-                        const container = document.getElementById('sortable-upload-{{ $collection }}');
-                        if (container && typeof Sortable !== 'undefined') {
-                            this.sortable = Sortable.create(container, {
-                                handle: '.sortable-handle',
-                                animation: 150,
-                                ghostClass: 'opacity-50',
-                                chosenClass: 'scale-105',
-                                dragClass: 'rotate-1',
-                                onEnd: (evt) => {
-                                    const items = Array.from(container.children);
-                                    const orderedIds = items.map(item => item.dataset.id);
-                                    @this.call('updateMediaOrder', orderedIds);
-                                }
-                            });
-                        }
-                    },
-                    destroy() {
-                        if (this.sortable) {
-                            this.sortable.destroy();
-                        }
-                    }
-                }
-            }
-        </script>
+        <!-- Include Livewire Sortable -->
+        <script src="https://cdn.jsdelivr.net/gh/livewire/sortable@v1.x.x/dist/livewire-sortable.js"></script>
     @endif
+
+
 </div>

@@ -234,7 +234,7 @@ class MediaUpload extends Component
         }
     }
 
-    public function updateMediaOrder($orderedIds)
+    public function updateTaskOrder($orderedIds)
     {
         foreach ($orderedIds as $index => $mediaId) {
             Media::where('id', $mediaId)->update(['order_column' => $index + 1]);

@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "livewire-sortable": "^1.0.0"
+  }
+}
