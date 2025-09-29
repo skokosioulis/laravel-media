@@ -54,5 +54,10 @@ class LaravelMediaServiceProvider extends PackageServiceProvider
         // Register additional view namespace for laravel-media
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'laravel-media');
 
+        // Publish the compiled JavaScript
+        $this->publishes([
+            __DIR__.'/../dist' => public_path('vendor/laravel-media'),
+        ], 'media-public');
+
     }
 }
