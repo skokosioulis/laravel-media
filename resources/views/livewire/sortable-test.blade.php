@@ -9,6 +9,9 @@
         <p class="text-sm text-gray-600">
             <strong>Instructions:</strong> Try dragging the items by their handles (⋮⋮) to reorder them.
         </p>
+        <button wire:click="resetOrder" class="mt-2 px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600">
+            Reset Order
+        </button>
     </div>
 
     <ul wire:sortable="updateTaskOrder" class="space-y-2">

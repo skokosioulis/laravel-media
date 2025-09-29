@@ -236,12 +236,42 @@ class MediaUpload extends Component
 
     public function updateTaskOrder($orderedIds)
     {
+        // Log the incoming order for debugging
+        \Log::info('Updating media order', [
+            'collection' => $this->collection,
+            'orderedIds' => $orderedIds,
+            'model' => $this->model,
+            'modelId' => $this->modelId
+        ]);
+
+        // Update the order for media items in this specific collection
         foreach ($orderedIds as $index => $mediaId) {
-            Media::where('id', $mediaId)->update(['order_column' => $index + 1]);
+            $updated = Media::where('id', $mediaId)
+                ->where('collection_name', $this->collection)
+                ->update(['order_column' => $index + 1]);
+
+            \Log::info('Updated media order', [
+                'mediaId' => $mediaId,
+                'newOrder' => $index + 1,
+                'updated' => $updated
+            ]);
         }
 
+        // Reload the media with the new order
         $this->loadExistingMedia();
-        $this->dispatch('media-reordered', ['collection' => $this->collection]);
+
+        // Log the final order for debugging
+        \Log::info('Final media order', [
+            'existingMedia' => collect($this->existingMedia)->pluck('id', 'order_column')->toArray()
+        ]);
+
+
+
+        // Dispatch event for any listeners
+        $this->dispatch('media-reordered', [
+            'collection' => $this->collection,
+            'orderedIds' => $orderedIds
+        ]);
     }
 
     public function loadExistingMedia()
@@ -263,7 +293,47 @@ class MediaUpload extends Component
             }
 
             if ($modelInstance) {
-                $this->existingMedia = $modelInstance->getMedia($this->collection)->sortBy('order_column')->values()->toArray();
+                // Clear any cached relationships to ensure fresh data
+                $modelInstance->unsetRelation('media');
+
+                // Get fresh media and ensure they have order values
+                $media = $modelInstance->getMedia($this->collection);
+
+                // Initialize order_column for media items that don't have it
+                $this->initializeOrderColumn($media);
+
+                // Refresh the media collection to get updated order values
+                $freshMedia = Media::whereIn('id', $media->pluck('id'))
+                    ->where('collection_name', $this->collection)
+                    ->orderBy('order_column', 'asc')
+                    ->orderBy('created_at', 'asc') // fallback for items with same order
+                    ->get();
+
+                $this->existingMedia = $freshMedia->toArray();
+
+                \Log::info('Loaded existing media', [
+                    'collection' => $this->collection,
+                    'count' => $freshMedia->count(),
+                    'order' => $freshMedia->pluck('id', 'order_column')->toArray()
+                ]);
+            }
+        }
+    }
+
+    /**
+     * Initialize order_column for media items that don't have it set
+     */
+    protected function initializeOrderColumn($media)
+    {
+        $mediaWithoutOrder = $media->whereNull('order_column');
+
+        if ($mediaWithoutOrder->count() > 0) {
+            // Get the highest existing order value
+            $maxOrder = $media->whereNotNull('order_column')->max('order_column') ?? 0;
+
+            // Assign order values to media without them
+            foreach ($mediaWithoutOrder as $index => $mediaItem) {
+                $mediaItem->update(['order_column' => $maxOrder + $index + 1]);
             }
         }
     }
