@@ -31,4 +31,9 @@ Route::middleware(['web'])->prefix('media')->name('media.')->group(function () {
 
     // Thumbnail generation
     Route::get('thumbnail/{media}', [MediaController::class, 'thumbnail'])->name('thumbnail');
+
+    // Debug route for testing sortable functionality
+    Route::get('debug/sortable', function () {
+        return view('laravel-media::examples.sortable-debug');
+    })->name('debug.sortable');
 });

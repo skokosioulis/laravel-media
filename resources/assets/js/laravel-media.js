@@ -1,4 +1,4 @@
-import 'livewire-sortable';
+
 /**
  * Laravel Media Package JavaScript
  *

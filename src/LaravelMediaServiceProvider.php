@@ -9,6 +9,7 @@ use Skokosioulis\LaravelMedia\Livewire\MediaGallery;
 use Skokosioulis\LaravelMedia\Livewire\MediaUpload;
 use Skokosioulis\LaravelMedia\Livewire\SingleMediaUpload;
 use Skokosioulis\LaravelMedia\Livewire\SortableMediaGallery;
+use Skokosioulis\LaravelMedia\Livewire\SortableTest;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -49,6 +50,7 @@ class LaravelMediaServiceProvider extends PackageServiceProvider
             Livewire::component('single-media-upload', SingleMediaUpload::class);
             Livewire::component('media-gallery', MediaGallery::class);
             Livewire::component('sortable-media-gallery', SortableMediaGallery::class);
+            Livewire::component('sortable-test', SortableTest::class);
         }
 
         // Register additional view namespace for laravel-media

@@ -140,10 +140,11 @@
         @endif
     @endif
 
-{{--    @if($sortablePreview)--}}
-{{--        <!-- Include Livewire Sortable -->--}}
-{{--        <script src="https://cdn.jsdelivr.net/gh/livewire/sortable@v1.x.x/dist/livewire-sortable.js"></script>--}}
-{{--    @endif--}}
-
-
+    @if($sortablePreview)
+        @once
+            @push('scripts')
+                <script src="https://cdn.jsdelivr.net/gh/livewire/sortable@v1.x.x/dist/livewire-sortable.js"></script>
+            @endpush
+        @endonce
+    @endif
 </div>
