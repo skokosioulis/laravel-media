@@ -69,9 +69,6 @@
                 </label>
 
                 <div class="text-sm text-gray-600">
-                    @if($acceptedTypes)
-                        <span class="block">Accepted: {{ str_replace(',', ', ', $acceptedTypes) }}</span>
-                    @endif
                     <span class="block">Max size: {{ number_format($maxFileSize / 1024, 1) }}MB</span>
                 </div>
             </div>
