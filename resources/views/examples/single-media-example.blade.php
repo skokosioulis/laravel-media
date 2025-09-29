@@ -11,15 +11,15 @@
     <div class="container mx-auto px-4 py-8">
         <div class="max-w-4xl mx-auto">
             <h1 class="text-3xl font-bold text-gray-900 mb-8">Single Media Upload Examples</h1>
-            
+
             <!-- Avatar Upload Example -->
             <div class="bg-white rounded-lg shadow-md p-6 mb-8">
                 <h2 class="text-xl font-semibold text-gray-800 mb-4">User Avatar Upload</h2>
                 <p class="text-gray-600 mb-4">
-                    This example shows how to use the SingleMediaUpload component for user avatars. 
+                    This example shows how to use the SingleMediaUpload component for user avatars.
                     When a new avatar is uploaded, it automatically replaces the existing one.
                 </p>
-                
+
                 <div class="max-w-md">
                     @livewire('single-media-upload', [
                         'model' => 'App\\Models\\User',
@@ -38,10 +38,10 @@
             <div class="bg-white rounded-lg shadow-md p-6 mb-8">
                 <h2 class="text-xl font-semibold text-gray-800 mb-4">Profile Cover Image</h2>
                 <p class="text-gray-600 mb-4">
-                    Upload a cover image for the user profile. This example allows larger files and shows 
+                    Upload a cover image for the user profile. This example allows larger files and shows
                     how to customize the placeholder text.
                 </p>
-                
+
                 <div class="max-w-lg">
                     @livewire('single-media-upload', [
                         'model' => 'App\\Models\\User',
@@ -60,10 +60,10 @@
             <div class="bg-white rounded-lg shadow-md p-6 mb-8">
                 <h2 class="text-xl font-semibold text-gray-800 mb-4">Document Upload</h2>
                 <p class="text-gray-600 mb-4">
-                    Upload a single document file. This example shows how to handle non-image files 
+                    Upload a single document file. This example shows how to handle non-image files
                     and disable replacement if needed.
                 </p>
-                
+
                 <div class="max-w-md">
                     @livewire('single-media-upload', [
                         'model' => 'App\\Models\\User',
@@ -88,7 +88,7 @@
     'modelId' => $user->id,
     'collection' => 'avatar'
 ])</code></pre>
-                    
+
                     <p class="mt-4"><strong>Available Parameters:</strong></p>
                     <ul class="list-disc pl-5 space-y-1">
                         <li><code>model</code> - The model class name</li>
@@ -99,6 +99,7 @@
                         <li><code>showPreview</code> - Show existing file preview (default: true)</li>
                         <li><code>replaceExisting</code> - Replace existing file when uploading (default: true)</li>
                         <li><code>placeholder</code> - Custom placeholder text</li>
+                        <li><code>useDropzone</code> - Use dropzone interface vs button (default: true)</li>
                     </ul>
 
                     <p class="mt-4"><strong>Events Dispatched:</strong></p>
@@ -113,7 +114,7 @@
     </div>
 
     @livewireScripts
-    
+
     <script>
         // Listen for upload events
         document.addEventListener('livewire:init', () => {
@@ -121,11 +122,11 @@
                 console.log('Media uploaded:', event);
                 // You can add custom logic here, like showing notifications
             });
-            
+
             Livewire.on('single-media-removed', (event) => {
                 console.log('Media removed:', event);
             });
-            
+
             Livewire.on('single-media-description-updated', (event) => {
                 console.log('Description updated:', event);
             });

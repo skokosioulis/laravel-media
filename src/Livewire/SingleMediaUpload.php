@@ -30,9 +30,11 @@ class SingleMediaUpload extends Component
 
     public $replaceExisting = true;
 
+    public $useDropzone = true;
+
     public $existingMedia = null;
 
-    public function mount($model = null, $modelId = null, $collection = 'default', $acceptedTypes = '', $maxFileSize = null, $showPreview = true, $placeholder = null, $replaceExisting = true)
+    public function mount($model = null, $modelId = null, $collection = 'default', $acceptedTypes = '', $maxFileSize = null, $showPreview = true, $placeholder = null, $replaceExisting = true, $useDropzone = true)
     {
         $this->model = $model;
         $this->modelId = $modelId;
@@ -40,8 +42,9 @@ class SingleMediaUpload extends Component
         $this->acceptedTypes = $acceptedTypes ?: $this->getAcceptedTypesFromConfig();
         $this->maxFileSize = $maxFileSize ?: config('media.upload_limits.max_file_size', 10240);
         $this->showPreview = $showPreview;
-        $this->placeholder = $placeholder ?: 'Click to upload or drag and drop';
+        $this->placeholder = $placeholder ?: ($useDropzone ? 'Click to upload or drag and drop' : 'Choose file');
         $this->replaceExisting = $replaceExisting;
+        $this->useDropzone = $useDropzone;
 
         $this->loadExistingMedia();
     }

@@ -526,3 +526,76 @@ it('validates single file uploads', function () {
         ->set('file', $largeFile)
         ->assertHasErrors(['file']);
 });
+
+// Dropzone vs Button Interface Tests
+it('renders dropzone interface by default', function () {
+    $model = TestModelForLivewire::create(['name' => 'Test Model']);
+
+    Livewire::test(MediaUpload::class, [
+        'model' => TestModelForLivewire::class,
+        'modelId' => $model->id,
+        'collection' => 'default',
+    ])
+        ->assertStatus(200)
+        ->assertSee('drag and drop')
+        ->assertSee('border-dashed');
+});
+
+it('renders button interface when useDropzone is false', function () {
+    $model = TestModelForLivewire::create(['name' => 'Test Model']);
+
+    Livewire::test(MediaUpload::class, [
+        'model' => TestModelForLivewire::class,
+        'modelId' => $model->id,
+        'collection' => 'default',
+        'useDropzone' => false,
+    ])
+        ->assertStatus(200)
+        ->assertSee('Choose Files')
+        ->assertDontSee('drag and drop');
+});
+
+it('renders single media upload with dropzone by default', function () {
+    $model = TestModelForLivewire::create(['name' => 'Test Model']);
+
+    Livewire::test(SingleMediaUpload::class, [
+        'model' => TestModelForLivewire::class,
+        'modelId' => $model->id,
+        'collection' => 'avatar',
+    ])
+        ->assertStatus(200)
+        ->assertSee('drag and drop');
+});
+
+it('renders single media upload with button interface when useDropzone is false', function () {
+    $model = TestModelForLivewire::create(['name' => 'Test Model']);
+
+    Livewire::test(SingleMediaUpload::class, [
+        'model' => TestModelForLivewire::class,
+        'modelId' => $model->id,
+        'collection' => 'avatar',
+        'useDropzone' => false,
+    ])
+        ->assertStatus(200)
+        ->assertSee('Choose file')
+        ->assertDontSee('drag and drop');
+});
+
+it('shows replace button when existing media and useDropzone is false', function () {
+    $model = TestModelForLivewire::create(['name' => 'Test Model']);
+
+    // Upload first file
+    $file = UploadedFile::fake()->image('avatar.jpg', 100, 100);
+    $model->addMedia($file, 'avatar');
+
+    Livewire::test(SingleMediaUpload::class, [
+        'model' => TestModelForLivewire::class,
+        'modelId' => $model->id,
+        'collection' => 'avatar',
+        'useDropzone' => false,
+        'replaceExisting' => true,
+    ])
+        ->assertStatus(200)
+        ->assertSee('Replace File')
+        ->assertSee('Will replace existing file');
+});

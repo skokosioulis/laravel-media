@@ -30,9 +30,11 @@ class MediaUpload extends Component
 
     public $sortablePreview = true;
 
+    public $useDropzone = true;
+
     public $existingMedia = [];
 
-    public function mount($model = null, $modelId = null, $collection = 'default', $multiple = true, $acceptedTypes = '', $maxFileSize = null, $showPreview = true, $sortablePreview = true)
+    public function mount($model = null, $modelId = null, $collection = 'default', $multiple = true, $acceptedTypes = '', $maxFileSize = null, $showPreview = true, $sortablePreview = true, $useDropzone = true)
     {
         $this->model = $model;
         $this->modelId = $modelId;
@@ -42,6 +44,7 @@ class MediaUpload extends Component
         $this->maxFileSize = $maxFileSize ?: config('media.upload_limits.max_file_size', 10240);
         $this->showPreview = $showPreview;
         $this->sortablePreview = $sortablePreview;
+        $this->useDropzone = $useDropzone;
 
         $this->loadExistingMedia();
     }

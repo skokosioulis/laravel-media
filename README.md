@@ -156,9 +156,14 @@ return [
     'multiple' => true,                      // Allow multiple files
     'acceptedTypes' => 'image/*',            // Accepted file types
     'maxFileSize' => 5120,                   // Max size in KB
-    'showPreview' => true                    // Show uploaded files preview
+    'showPreview' => true,                   // Show uploaded files preview
+    'useDropzone' => true                    // Use dropzone interface (default: true)
 ])
 ```
+
+**Interface Options:**
+- **Dropzone** (`useDropzone: true`): Drag-and-drop area with visual feedback
+- **Button** (`useDropzone: false`): Simple button interface
 
 ### SingleMediaUpload Component
 
@@ -173,9 +178,14 @@ Perfect for uploading a single file with automatic replacement functionality:
     'maxFileSize' => 2048,                   // Max size in KB
     'showPreview' => true,                   // Show existing file preview
     'replaceExisting' => true,               // Replace existing file when uploading new one
-    'placeholder' => 'Upload your avatar'    // Custom placeholder text
+    'placeholder' => 'Upload your avatar',   // Custom placeholder text
+    'useDropzone' => true                    // Use dropzone interface (default: true)
 ])
 ```
+
+**Interface Options:**
+- **Dropzone** (`useDropzone: true`): Drag-and-drop area with visual feedback
+- **Button** (`useDropzone: false`): Simple button interface with "Replace File" when media exists
 
 ### MediaGallery Component
 
