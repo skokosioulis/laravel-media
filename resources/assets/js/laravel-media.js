@@ -1,6 +1,7 @@
+import 'livewire-sortable';
 /**
  * Laravel Media Package JavaScript
- * 
+ *
  * This file contains utility functions and Alpine.js components
  * for the Laravel Media package.
  */
@@ -12,11 +13,11 @@ window.LaravelMedia = {
      */
     formatFileSize(bytes) {
         if (bytes === 0) return '0 Bytes';
-        
+
         const k = 1024;
         const sizes = ['Bytes', 'KB', 'MB', 'GB'];
         const i = Math.floor(Math.log(bytes) / Math.log(k));
-        
+
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     },
 
@@ -100,7 +101,7 @@ document.addEventListener('alpine:init', () => {
 
         handleFiles(fileList) {
             const newFiles = Array.from(fileList);
-            
+
             // Check max files limit
             if (this.maxFiles && (this.files.length + newFiles.length) > this.maxFiles) {
                 alert(`Maximum ${this.maxFiles} files allowed`);
@@ -109,7 +110,7 @@ document.addEventListener('alpine:init', () => {
 
             newFiles.forEach(file => {
                 const validation = LaravelMedia.validateFile(file, this.allowedTypes, this.maxSize);
-                
+
                 if (validation.valid) {
                     const fileData = {
                         file: file,
@@ -122,7 +123,7 @@ document.addEventListener('alpine:init', () => {
                         progress: 0,
                         error: null
                     };
-                    
+
                     this.files.push(fileData);
                 } else {
                     alert(validation.errors.join('\n'));
@@ -142,28 +143,28 @@ document.addEventListener('alpine:init', () => {
             if (this.files.length === 0) return;
 
             this.uploading = true;
-            
+
             for (let i = 0; i < this.files.length; i++) {
                 const fileData = this.files[i];
-                
+
                 if (fileData.uploaded) continue;
-                
+
                 try {
                     await this.uploadFile(fileData, i);
                 } catch (error) {
                     fileData.error = error.message;
                 }
             }
-            
+
             this.uploading = false;
         },
 
         async uploadFile(fileData, index) {
             const formData = new FormData();
             formData.append('file', fileData.file);
-            
+
             fileData.uploading = true;
-            
+
             try {
                 const response = await fetch('/media/upload', {
                     method: 'POST',
@@ -172,7 +173,7 @@ document.addEventListener('alpine:init', () => {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                     }
                 });
-                
+
                 if (response.ok) {
                     fileData.uploaded = true;
                     fileData.progress = 100;
@@ -209,7 +210,7 @@ document.addEventListener('alpine:init', () => {
 
         async loadMedia() {
             this.loading = true;
-            
+
             try {
                 // This would typically fetch from your API
                 // const response = await fetch('/media');
@@ -240,9 +241,9 @@ document.addEventListener('alpine:init', () => {
 
         async deleteSelected() {
             if (this.selectedItems.length === 0) return;
-            
+
             if (!confirm(`Delete ${this.selectedItems.length} selected items?`)) return;
-            
+
             try {
                 const response = await fetch('/media/bulk-delete', {
                     method: 'POST',
@@ -252,7 +253,7 @@ document.addEventListener('alpine:init', () => {
                     },
                     body: JSON.stringify({ ids: this.selectedItems })
                 });
-                
+
                 if (response.ok) {
                     this.loadMedia();
                     this.selectedItems = [];
