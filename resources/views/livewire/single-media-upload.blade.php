@@ -7,7 +7,7 @@
                     <!-- Media Thumbnail -->
                     <div class="flex-shrink-0">
                         @if($existingMedia->type === 'image')
-                            <img class="w-16 h-16 object-cover rounded-lg bg-gray-100"
+                            <img class="w-16 h-16 object-contain rounded-lg bg-gray-100"
                                  src="{{ $existingMedia->url }}"
                                  alt="{{ $existingMedia->alt_text ?? $existingMedia->name }}">
                         @else

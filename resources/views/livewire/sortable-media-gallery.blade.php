@@ -40,14 +40,14 @@
                     <!-- Media Content -->
                     <div class="aspect-square bg-gray-100 relative">
                         @if($item['type'] === 'image')
-                            <img 
-                                src="{{ $item['url'] }}" 
-                                alt="{{ $item['alt_text'] ?? $item['name'] }}" 
-                                class="w-full h-full object-cover"
+                            <img
+                                src="{{ $item['url'] }}"
+                                alt="{{ $item['alt_text'] ?? $item['name'] }}"
+                                class="w-full h-full object-contain"
                             >
                             <!-- Image Overlay -->
                             <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-200 flex items-center justify-center">
-                                <button 
+                                <button
                                     onclick="openMediaModal('{{ $item['url'] }}', '{{ addslashes($item['name']) }}', '{{ $item['type'] }}')"
                                     class="bg-white bg-opacity-90 text-gray-800 p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-opacity-100"
                                 >
@@ -111,7 +111,7 @@
                     <div class="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                         <div class="flex space-x-1">
                             <!-- Download Button -->
-                            <a href="{{ $item['url'] }}" 
+                            <a href="{{ $item['url'] }}"
                                download="{{ $item['name'] }}"
                                class="bg-blue-500 text-white p-1.5 rounded-full hover:bg-blue-600 transition-colors duration-200"
                                title="Download">
@@ -119,9 +119,9 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                 </svg>
                             </a>
-                            
+
                             <!-- Delete Button -->
-                            <button 
+                            <button
                                 wire:click="removeMedia({{ $item['id'] }})"
                                 onclick="return confirm('Are you sure you want to delete this file?')"
                                 class="bg-red-500 text-white p-1.5 rounded-full hover:bg-red-600 transition-colors duration-200"
