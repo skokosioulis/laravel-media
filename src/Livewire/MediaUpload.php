@@ -247,7 +247,7 @@ class MediaUpload extends Component
         // Update the order for media items in this specific collection
         foreach ($orderedIds as $index => $mediaId) {
             // Extract the actual ID from the item
-            $mediaId = is_array($mediaId) ? ($item['value'] ?? $item) : $item;
+            $mediaId = is_array($mediaId) ? ($mediaId['value'] ?? $mediaId) : $mediaId;
 
             $updated = Media::where('id', $mediaId)
                 ->where('collection_name', $this->collection)
